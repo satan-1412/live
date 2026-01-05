@@ -1,0 +1,110 @@
+#EXTM3U
+
+                    ### --- 直播频道 --- ###
+
+#EXTINF:-1 group-title="国际电视台",NHK World-Japan（日本广播协会国际频道）
+https://media-tyo.hls.nhkworld.jp/hls/w/live/master.m3u8
+
+#EXTINF:-1 tvg-logo="图片链接" group-title="综合电视台",ViuTV（99台-中国香港）
+https://inhouse-stream.viu.tv/out/v1/2c38f5cb7a3f42dea60ce716325c0c44/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://cdn2.tdm.com.mo/uploads/media/web_images/tdm%20new%20app%20logo.png?x-image-process=style/origin" group-title="综合电视台",澳視澳門 91台-中国澳门
+https://globallive.tdm.com.mo/ch1/ch1.live/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://cdn2.tdm.com.mo/uploads/media/web_images/tdm%20new%20app%20logo.png?x-image-process=style/origin" group-title="综合电视台",澳視葡文 92台-中国澳门（葡文）
+https://globallive.tdm.com.mo/ch2/ch2.live/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://cdn2.tdm.com.mo/uploads/media/web_images/tdm%20new%20app%20logo.png?x-image-process=style/origin" group-title="体育电视台",澳門體育 93台-中国澳门
+https://globallive.tdm.com.mo/ch4/sport_ch4.live/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://cdn2.tdm.com.mo/uploads/media/web_images/tdm%20new%20app%20logo.png?x-image-process=style/origin" group-title="新闻电视台",澳門資訊 94台-中国澳门
+https://globallive.tdm.com.mo/ch5/info_ch5.live/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://cdn2.tdm.com.mo/uploads/media/web_images/tdm%20new%20app%20logo.png?x-image-process=style/origin" group-title="娱乐电视台",澳門綜藝 95台-中国澳门
+https://globallive.tdm.com.mo/ch6/hd_ch6.live/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://cdn2.tdm.com.mo/uploads/media/web_images/tdm%20new%20app%20logo.png?x-image-process=style/origin" group-title="国际电视台",澳門-Macau 96台-中国澳门
+https://globallive.tdm.com.mo/ch3/ch3.live/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=large-480&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fcms%2Fproduction%2Fd71ef498-0483-4a1b-8439-1110a998205d%2Fsmurftv_logo_dark_-_Jordan_Warkol.png" group-title="动画电视台",Smurf TV-比利时/法国（蓝精灵）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-639b8d803f4612cc150a5721.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=_29oB-yiyA_UyceTBfdY
+
+#EXTINF:-1 tvg-logo="https://a.jsrdn.com/hls/22868/kaloopy/thumbh_20200609_231841_270.jpg" group-title="艺术电视台",Kaloopy-美国
+https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/kaloopy/master.m3u8?ads.dpname=distrotv&ads.rnd=vbo4&ads.env_i=f85b0723-77af-4923-a61d-58d54aba23d7&ads.env_u=&ads.name=DistroTV&ads.bundle=&ads.storeurl=&ads.appCategory=entertainment&ads.app_version=202105131041&ads.width=418&ads.height=235&ads.deviceId=&ads.deviceDNT=0&ads.gdpr=0&ads.us_privacy=0&ads.aid=&ads.deviceMake=Web&ads.deviceIdType=localStorage&ads.deviceConnectionType=2&ads.deviceCategory=web&ads.client_ip=38.150.11.78&ads.geo=JP&ads.lat=35.61640&ads.long=139.74250&ads.dma=&ads.geoType=2&ads.contentid=22868&ads.content_duration=18000&ads.episode_id=73234&ads.show_id=1093&ads.showCategories=IAB1&ads.episodeCategories=IAB1&ads.genre=Entertainment%2CLifestyle%2CSports%2CMusic%2CGaming%2CEnglish&ads.showRating=TV-14&ads.episodeRating=TV-14&ads.language=en&ads.showtitle=Kaloopy&ads.episodetitle=Kaloopy&ads.keywords=Nascar%2Cmens%20lifestyle%2Ccall%20of%20duty%2Cgaming%2Cfitness%2Ctech%2Cmens%20fashion%2Chouse%20music%2Cmotorcycles%2Ccars%2Csoccer%2Cmotorsport%2Ctravel%2Cbeach%2Ccalifornia%2Cufc%2Cmilitary%2Csurfing%2Cskating%2Cfashion&ads.contenturl=&ads.gdprConsent=&ads.paln=&ads.tagname=dtv&ads.islive=1&ads.streamtype=live&ads.vf=20260104
+
+#EXTINF:-1 tvg-logo="https://storage.googleapis.com/bucket-pdpa-static-prod/dev/upload/000/351/512/ad868eb3-d194-4a22-be1f-08cca6a71ef1/original/cookie-banner-image.png" group-title="国际电视台",Thai pbs（泰国公共电视台）
+https://thaipbs-mcx0wm.cdn.byteark.com/live/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="" group-title="动画电视台",Toonami Aftermath！-美国（Toonami怀旧台）
+https://asp6.toonamiaftermath.com/livehttporigin/est/Z8gAuT-jR3KyX-playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=small-120&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fcms%2Fproduction%2Fa3d02bc9-13e3-4263-aff8-6a8512501b80%2F1500x1500_Just_for_laughs_CARLOS_PACHECO.png" group-title="搞笑电视台",GAGS-加拿大（恶作剧搞笑录像）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-64704954e536e0faaf10be9f.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=3nApNpoLJzLAsyicCw66
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=large-480&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fimages%2Fott_channels%2Flogos%2Ftg-junior-non-us.png" group-title="动画电视台",Toon Goggles-美国（托恩少儿台）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-5f123330eca6a20040b328e8.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=JrqRD2hd52BCMgMAGA9s
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=large-480&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fcms%2Fproduction%2F1bfcb8e4-9593-4914-aa02-14b966a2ec7e%2FAF_Logo_for_Light_BG__transparent__-_Jose_RiveraRDX.png" group-title="搞笑电视台",Always Funny-美国（家庭幽默）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-5ef11486d33ab9004048a1cd.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=ScsS3HWg5bV5bXYA_PLp
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=small-120&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fcms%2Fproduction%2Fc3a3b230-a40b-4409-b33f-678c1923bd77%2FFailArmy_logo_dark_v2.png" group-title="搞笑电视台",FailArmy-美国（翻车大合集）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-5f170d62b898490041b4936e.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=B9wcsADFL1zdBzJuk3TY
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=small-120&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fcms%2Fproduction%2F18c7eba5-bcd4-45bd-9d3a-65d3984fec32%2FDarkBG_1500x1000.png" group-title="娱乐电视台",Dude Perfect-美国（极限熊猫）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-68d7f9b53b1f329cea126993.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=NoQLrt1j3dZKypW9Wrsr
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=small-120&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fimages%2Fott_channels%2Flogos%2Fcooking-panda.png" group-title="美食电视台",Cooking Panda-美国（厨艺熊猫）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-5f07e9fdf313eb0041bbecda.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=ZfsLnzBQFndcmaiReHjb
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=small-120&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fcms%2Fproduction%2Fd3f6d54b-64cf-44ed-a960-2feb1c4b05c7%2FUS_STVP_AnimationPlus_logo_Color_1500x1000_-_Kai_Schneider.png" group-title="动画电视台",Animation-美国（动画电影）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-674f6a6cf44561420465f9f3.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=AzSBdFyA5fgLk47xvEyk
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=small-120&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fcms%2Fproduction%2F6aedfb80-69ab-4b5d-a34b-8e720a753673%2FNEW_KFOOD_Color_Logo-Dark_Background.png" group-title="美食电视台",New-K-Food-韩国（新食尚）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-68b9f5a3d60e5dd29263c7ac.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=DP9wBwVbQ77qgh_meLJ7
+
+#EXTINF:-1 tvg-logo="https://a.jsrdn.com/hls/23195/box-gamers/logo_20250102_230327_70.png" group-title="游戏电视台",Box gamers-墨西哥（box游戏台）
+https://d3s7x6kmqcnb6b.cloudfront.net/d/distro001a/N2IXYNBLLX4DWYFU7VAP/hls3/now,-1m/m.m3u8?ads.dpname=distrotv&ads.channel_name=Box+Gamers&ads.content_id=SKL102&ads.coppa=0&ads.provider=Klasko&ads.rnd=vji9&ads.env_i=beff966d-b08f-4bb0-89d3-31aba75f4d68&ads.env_u=&ads.name=DistroTV&ads.bundle=&ads.storeurl=&ads.appCategory=entertainment&ads.app_version=202105131041&ads.width=418&ads.height=235&ads.deviceId=&ads.deviceDNT=0&ads.gdpr=0&ads.us_privacy=0&ads.aid=&ads.deviceMake=Web&ads.deviceIdType=localStorage&ads.deviceConnectionType=2&ads.deviceCategory=web&ads.client_ip=38.150.11.78&ads.geo=JP&ads.lat=35.61640&ads.long=139.74250&ads.dma=&ads.geoType=2&ads.contentid=23195&ads.content_duration=18000&ads.episode_id=138032&ads.show_id=5277&ads.showCategories=IAB9&ads.episodeCategories=IAB9&ads.genre=Fun%20%26%20Games%2CEsports%2CGaming%2CSpanish&ads.showRating=TV-PG&ads.episodeRating=TV-PG&ads.language=es&ads.showtitle=Box%20Gamers&ads.episodetitle=Box%20Gamers&ads.keywords=Gaming%2CSports&ads.contenturl=&ads.gdprConsent=&ads.paln=&ads.islive=1&ads.streamtype=live&ads.vf=20260104
+
+#EXTINF:-1 tvg-logo="图片链接" group-title="分类名",频道名
+
+
+#EXTINF:-1 tvg-logo="图片链接" group-title="分类名",频道名
+                    ### --- 在线视频 --- ###
+
+#EXTINF:-1 tvg-logo="https://32d.cc/upload/vod/20250727-17/f071930f43e8d60f2f70ebe5a08ef6f5.jpg" group-title="在线电影",新·奥特曼（普通话版）
+https://hn.bfvvs.com/play/hls/epYYkK2a/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://32d.cc/upload/vod/20250727-17/f071930f43e8d60f2f70ebe5a08ef6f5.jpg" group-title="在线电影",新·奥特曼 （日语）
+https://hn.bfvvs.com/play/hls/aKrrLVze/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://32d.cc/upload/vod/20250912-1/12ee437e847cd713116bd42ad7ceb17c.jpg" group-title="在线电影",孤独的美食家剧场版
+https://hn.bfvvs.com/play/hls/mepOYm1d/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://32d.cc/upload/vod/20250729-17/62e283dce538816c7240bd9662fbbb26.jpg" group-title="在线电影",菊次郎的夏天
+https://hn.bfvvs.com/play/hls/YerxmWbO/index.m3u8
+
+#EXTINF:-1 tvg-logo="http://i2.hdslb.com/bfs/archive/8213fd889c06c53ed1bcd41bafe7972b4b570023.jpg" group-title="B站在线视频",云南方言系列之疯狂的歪歌-烧饵块【全集】
+https://upos-sz-mirrorcos.bilivideo.com/upgcxcode/37/68/23356837/23356837_da3-1-16.mp4?e=ig8euxZM2rNcNbRVhwdVhwdlhWdVhwdVhoNvNC8BqJIzNbfq9rVEuxTEnE8L5F6VnEsSTx0vkX8fqJeYTj_lta53NCM=&os=estgcos&og=cos&uipk=5&trid=6b98d260b7054155b851b3c5eaae2baO&nbs=1&gen=playurlv3&oi=1385955528&deadline=1767571777&platform=html5&mid=0&upsig=f74ca597a68a84ff0d0e07aa04485020&uparams=e,os,og,uipk,trid,nbs,gen,oi,deadline,platform,mid&bvc=vod&nettype=1&bw=206736&agrr=1&buvid=&build=7330300&dl=0&f=O_0_0&orderid=0,3
+
+#EXTINF:-1 tvg-logo="http://i1.hdslb.com/bfs/archive/18fd5fa195a8f6e02dd34f7a53599216c4d69fdb.jpg" group-title="B站在线视频",迈克尔杰克逊1988 完整版《犯罪高手》 Smooth criminal
+https://upos-sz-mirrorcos.bilivideo.com/upgcxcode/71/41/362064171/362064171_da2-1-192.mp4?e=ig8euxZM2rNcNbRjhzdVhwdlhWTzhwdVhoNvNC8BqJIzNbfq9rVEuxTEnE8L5F6VnEsSTx0vkX8fqJeYTj_lta53NCM=&trid=4dc80f235b02416cb94529d032dd612O&gen=playurlv3&og=hw&uipk=5&deadline=1767571543&oi=144233936&os=zosbv&platform=html5&mid=0&nbs=1&upsig=d6044509fb395dfbddc4b5597ec4d403&uparams=e,trid,gen,og,uipk,deadline,oi,os,platform,mid,nbs&bvc=vod&nettype=1&bw=1307889&dl=0&f=O_0_0&agrr=1&buvid=&build=7330300&orderid=0,3
+
+#EXTINF:-1 tvg-logo="图片链接" group-title="分类名",频道名
+
+
+#EXTINF:-1 tvg-logo="图片链接" group-title="分类名",频道名
+
+
+#EXTINF:-1 tvg-logo="图片链接" group-title="分类名",频道名
+
+
+#EXTINF:-1 tvg-logo="图片链接" group-title="分类名",频道名
+
+
+#EXTINF:-1 tvg-logo="图片链接" group-title="分类名",频道名
+
+
+#EXTINF:-1 tvg-logo="图片链接" group-title="分类名",频道名
+
+
+#EXTINF:-1 tvg-logo="图片链接" group-title="分类名",频道名
