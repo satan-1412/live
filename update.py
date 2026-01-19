@@ -11,11 +11,17 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 TARGET_FILES = ['TV.m3u8', 'no sex/TV_1(no sex).m3u8']
 JSON_FILE = 'streams.json'
 
-# [注意] 删除了 SERVER_HOST 和 TXT_DB_DIR，因为不再需要本地服务支持
-
-UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+UA_LIST = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15',
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
+]
 BATCH_SIZE = 10     # 并发处理阈值
 COOKIE_TEMP_FILE = 'cookies_netscape.txt' # 仅作为运行时临时文件，不上传
+
+def get_random_ua():
+    import random
+    return random.choice(UA_LIST)
 
 # ==========================================
 # 🔐 鉴权凭证处理子系统 (Credential Subsystem)
@@ -25,19 +31,16 @@ def process_smart_cookies():
     [鉴权逻辑] 优先从云端环境变量加载，避免本地文件依赖
     """
     content = None
-    source_type = "未定义"
 
     if 'YOUTUBE_COOKIES' in os.environ and os.environ['YOUTUBE_COOKIES'].strip():
         print("    [鉴权中心] ☁️ 检测到云端环境变量密钥，正在加载...")
         content = os.environ['YOUTUBE_COOKIES']
-        source_type = "云端密钥"
     elif os.path.exists('cookies.txt'):
         try:
             with open('cookies.txt', 'r', encoding='utf-8', errors='ignore') as f:
                 content = f.read().strip()
             if content:
                 print("    [鉴权中心] 📂 检测到本地凭证文件，正在加载...")
-                source_type = "本地文件"
         except: pass
 
     if not content: 
@@ -51,15 +54,13 @@ def process_smart_cookies():
                 if isinstance(data, dict): data = [data]
                 with open(COOKIE_TEMP_FILE, 'w', encoding='utf-8') as out:
                     out.write("# Netscape HTTP Cookie File\n")
-                    valid_count = 0
                     for c in data:
                         if 'domain' not in c or 'name' not in c: continue
                         domain = c.get('domain', '')
                         if not domain.startswith('.'): domain = '.' + domain
                         expiry = str(int(c.get('expirationDate', time.time() + 31536000)))
                         out.write(f"{domain}\tTRUE\t{c.get('path','/')}\tTRUE\t{expiry}\t{c.get('name')}\t{c.get('value')}\n")
-                        valid_count += 1
-                print(f"    [鉴权中心] ✅ JSON 格式凭证转换完毕 (有效条目: {valid_count})")
+                print(f"    [鉴权中心] ✅ JSON 格式凭证转换完毕")
                 return True
             except:
                 print(f"    [鉴权中心] ⚠️ JSON 解析异常，尝试切换至兼容模式...")
@@ -87,20 +88,28 @@ def process_smart_cookies():
         print(f"    [鉴权中心] ❌ 凭证处理流程致命错误: {e}")
         return False
 
-# --- 核心解析模块 (强制单流合并 + 快速失败) ---
+# --- 核心解析模块 (直播流优化版) ---
 def get_real_url(url, channel_name, retry_mode=False):
     is_yt = 'youtube.com' in url or 'youtu.be' in url
     
-    cmd = ['yt-dlp', '-g', '--no-playlist', '--no-check-certificate', '--user-agent', UA]
-    cmd.extend(['-f', 'best[ext=mp4]/best']) 
+    # 使用随机 UA 避免封锁
+    cmd = ['yt-dlp', '-g', '--no-playlist', '--no-check-certificate', '--user-agent', get_random_ua()]
+    
+    # [关键修改] 针对直播流，强制优先获取 m3u8 (HLS) 协议
+    # best[protocol^=m3u8] 会优先选 HLS，这比 mp4 更适合直播，且不易断流
+    if is_yt:
+        cmd.extend(['-f', 'best[protocol^=m3u8]/best'])
+    else:
+        cmd.extend(['-f', 'best[ext=mp4]/best']) 
     
     if is_yt:
-        cmd.extend(['--referer', 'https://www.bilibili.com/'])
+        cmd.extend(['--referer', 'https://www.youtube.com/'])
         if os.path.exists(COOKIE_TEMP_FILE): cmd.extend(['--cookies', COOKIE_TEMP_FILE])     
     cmd.append(url)
     
     try:
-        res = subprocess.run(cmd, capture_output=True, text=True, timeout=45)
+        # 增加一点超时时间，因为 live 解析有时比较慢
+        res = subprocess.run(cmd, capture_output=True, text=True, timeout=50)
         if res.returncode == 0:
             raw_output = res.stdout.strip()
             real_url = raw_output.split('\n')[0] if raw_output else None
@@ -119,10 +128,14 @@ def update_streams():
     # 1. 执行鉴权
     process_smart_cookies()
     
-    with open(JSON_FILE, 'r', encoding='utf-8') as f: data = json.load(f)
+    # 容错读取 JSON
+    try:
+        with open(JSON_FILE, 'r', encoding='utf-8') as f: data = json.load(f)
+    except Exception as e:
+        print(f"❌ JSON 配置文件格式错误: {e}")
+        return
 
-    # [修改] 移除合集任务处理逻辑，只保留直播源提取
-    # 如果配置文件里还有 Run_Series_Loop，直接弹出丢弃，不报错
+    # 移除合集任务处理逻辑
     if "Run_Series_Loop" in data:
         data.pop("Run_Series_Loop") 
     
@@ -134,17 +147,16 @@ def update_streams():
     extract(data)
 
     unique_tasks = {}
-    # [保留] 读取原有 M3U8 以保持排序和非自动更新的频道
+    # 读取原有 M3U8 以保持排序
     for m in TARGET_FILES:
         if os.path.exists(m):
             with open(m, 'r', encoding='utf-8') as f:
                 for line in f:
                     if line.startswith('#EXTINF:'):
                         name = line.split(',')[-1].strip()
-                        # 只有在 streams.json 里存在的频道才会被纳入更新队列
                         if name in stream_map: unique_tasks[name] = stream_map[name]
 
-    # 过滤出需要更新的直播任务 (排除本地链接，虽然现在理论上没有本地链接了)
+    # 过滤出需要更新的直播任务
     live_tasks = [(k, v) for k, v in unique_tasks.items()]
 
     failed_channels = []
