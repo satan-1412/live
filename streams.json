@@ -1,0 +1,40 @@
+{
+  "油管影视剧频道": {
+        "24H憨豆先生": "https://www.youtube.com/watch?v=lldsi8ItNaI",
+        "24H武林外传":"https://www.youtube.com/live/Pp4zaahCN24",
+        "24H三国演义":"https://www.youtube.com/live/1hv5TEYJ0pc"
+    },
+
+  "油管动画频道": {
+        "24H猫和老鼠": "https://www.youtube.com/live/rEKifG2XUZg",
+        "24H-海绵宝宝":"https://www.youtube.com/live/NC5JgC4FDCw",
+        "24H星际宝贝":"https://www.youtube.com/live/F4Tnje7wi-o",
+        "24H火柴人动画":"https://www.youtube.com/live/nuSAAK6W5hY"
+    },
+
+    "油管音乐频道":{
+        "24H周杰伦电台":"https://www.youtube.com/live/q8hw5oKCDp4",
+        "24H-AI山海经":"https://www.youtube.com/live/al4rG3dpKEA"
+    },
+
+    "油管治愈频道":{
+        "狗狗TV":"https://www.youtube.com/live/hyBHEskxzw8"
+    },
+
+    "油管娱乐频道":{
+        "24H第一视角跑酷":"https://www.youtube.com/live/SBajlWdwjSA"
+    },
+
+    "哔哩哔哩直播":{
+        "24H央视网":"https://live.bilibili.com/8178490"
+  },
+
+  "Run_Series_Loop": {
+      "24H老马拍案轮播": "https://youtube.com/playlist?list=PL21aEZ3O7XtdX5T3IFtA_sIy77NWGBqIf&si=eFZYVUCwq-JOZgsZ",
+        "24H动漫收藏夹": {
+    "url": "https://youtube.com/playlist?list=PLo9OBVKrcqyCA-Fs9ApSZET_whS4T11Ta&si=3AYJ8abaMH8JbbnX",
+    "random": true
+    }
+  }
+}
+

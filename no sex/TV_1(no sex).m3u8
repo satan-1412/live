@@ -1,0 +1,164 @@
+#EXTM3U
+
+#EXT-X-SESSION-DATA:ID="com.apple.hls.cache",VALUE="false"
+
+#EXT-X-CLIENT-PROPERTIES:USER-AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+
+
+                    ### --- 直播频道 --- ###
+
+#EXTINF:-1 group-title="国际电视台",NHK World-Japan（日本广播协会国际频道）
+https://media-tyo.hls.nhkworld.jp/hls/w/live/master.m3u8
+
+#EXTINF:-1 tvg-logo="https://cdn2.tdm.com.mo/uploads/media/web_images/tdm%20new%20app%20logo.png?x-image-process=style/origin" group-title="综合电视台",澳視澳門 91台-中国澳门
+https://globallive.tdm.com.mo/ch1/ch1.live/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://cdn2.tdm.com.mo/uploads/media/web_images/tdm%20new%20app%20logo.png?x-image-process=style/origin" group-title="综合电视台",澳視葡文 92台-中国澳门（葡文）
+https://globallive.tdm.com.mo/ch2/ch2.live/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://cdn2.tdm.com.mo/uploads/media/web_images/tdm%20new%20app%20logo.png?x-image-process=style/origin" group-title="体育电视台",澳門體育 93台-中国澳门
+https://globallive.tdm.com.mo/ch4/sport_ch4.live/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://cdn2.tdm.com.mo/uploads/media/web_images/tdm%20new%20app%20logo.png?x-image-process=style/origin" group-title="新闻电视台",澳門資訊 94台-中国澳门
+https://globallive.tdm.com.mo/ch5/info_ch5.live/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://cdn2.tdm.com.mo/uploads/media/web_images/tdm%20new%20app%20logo.png?x-image-process=style/origin" group-title="娱乐电视台",澳門綜藝 95台-中国澳门
+https://globallive.tdm.com.mo/ch6/hd_ch6.live/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://cdn2.tdm.com.mo/uploads/media/web_images/tdm%20new%20app%20logo.png?x-image-process=style/origin" group-title="国际电视台",澳門-Macau 96台-中国澳门
+https://globallive.tdm.com.mo/ch3/ch3.live/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=large-480&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fcms%2Fproduction%2Fd71ef498-0483-4a1b-8439-1110a998205d%2Fsmurftv_logo_dark_-_Jordan_Warkol.png" group-title="动画电视台",Smurf TV-比利时/法国（蓝精灵）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-639b8d803f4612cc150a5721.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=_29oB-yiyA_UyceTBfdY
+
+#EXTINF:-1 tvg-logo="https://a.jsrdn.com/hls/22868/kaloopy/thumbh_20200609_231841_270.jpg" group-title="艺术电视台",Kaloopy-美国
+https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/kaloopy/master.m3u8?ads.dpname=distrotv&ads.rnd=vbo4&ads.env_i=f85b0723-77af-4923-a61d-58d54aba23d7&ads.env_u=&ads.name=DistroTV&ads.bundle=&ads.storeurl=&ads.appCategory=entertainment&ads.app_version=202105131041&ads.width=418&ads.height=235&ads.deviceId=&ads.deviceDNT=0&ads.gdpr=0&ads.us_privacy=0&ads.aid=&ads.deviceMake=Web&ads.deviceIdType=localStorage&ads.deviceConnectionType=2&ads.deviceCategory=web&ads.client_ip=38.150.11.78&ads.geo=JP&ads.lat=35.61640&ads.long=139.74250&ads.dma=&ads.geoType=2&ads.contentid=22868&ads.content_duration=18000&ads.episode_id=73234&ads.show_id=1093&ads.showCategories=IAB1&ads.episodeCategories=IAB1&ads.genre=Entertainment%2CLifestyle%2CSports%2CMusic%2CGaming%2CEnglish&ads.showRating=TV-14&ads.episodeRating=TV-14&ads.language=en&ads.showtitle=Kaloopy&ads.episodetitle=Kaloopy&ads.keywords=Nascar%2Cmens%20lifestyle%2Ccall%20of%20duty%2Cgaming%2Cfitness%2Ctech%2Cmens%20fashion%2Chouse%20music%2Cmotorcycles%2Ccars%2Csoccer%2Cmotorsport%2Ctravel%2Cbeach%2Ccalifornia%2Cufc%2Cmilitary%2Csurfing%2Cskating%2Cfashion&ads.contenturl=&ads.gdprConsent=&ads.paln=&ads.tagname=dtv&ads.islive=1&ads.streamtype=live&ads.vf=20260104
+
+#EXTINF:-1 tvg-logo="https://storage.googleapis.com/bucket-pdpa-static-prod/dev/upload/000/351/512/ad868eb3-d194-4a22-be1f-08cca6a71ef1/original/cookie-banner-image.png" group-title="国际电视台",Thai pbs（泰国公共电视台）
+https://thaipbs-mcx0wm.cdn.byteark.com/live/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=small-120&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fcms%2Fproduction%2Fa3d02bc9-13e3-4263-aff8-6a8512501b80%2F1500x1500_Just_for_laughs_CARLOS_PACHECO.png" group-title="搞笑电视台",GAGS-加拿大（恶作剧搞笑录像）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-64704954e536e0faaf10be9f.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=3nApNpoLJzLAsyicCw66
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=large-480&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fimages%2Fott_channels%2Flogos%2Ftg-junior-non-us.png" group-title="动画电视台",Toon Goggles-美国（托恩少儿台）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-5f123330eca6a20040b328e8.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=JrqRD2hd52BCMgMAGA9s
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=large-480&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fcms%2Fproduction%2F1bfcb8e4-9593-4914-aa02-14b966a2ec7e%2FAF_Logo_for_Light_BG__transparent__-_Jose_RiveraRDX.png" group-title="搞笑电视台",Always Funny-美国（家庭幽默）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-5ef11486d33ab9004048a1cd.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=ScsS3HWg5bV5bXYA_PLp
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=small-120&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fcms%2Fproduction%2Fc3a3b230-a40b-4409-b33f-678c1923bd77%2FFailArmy_logo_dark_v2.png" group-title="搞笑电视台",FailArmy-美国（翻车大合集）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-5f170d62b898490041b4936e.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=B9wcsADFL1zdBzJuk3TY
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=small-120&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fcms%2Fproduction%2F18c7eba5-bcd4-45bd-9d3a-65d3984fec32%2FDarkBG_1500x1000.png" group-title="娱乐电视台",Dude Perfect-美国（极限熊猫）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-68d7f9b53b1f329cea126993.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=NoQLrt1j3dZKypW9Wrsr
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=small-120&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fimages%2Fott_channels%2Flogos%2Fcooking-panda.png" group-title="美食电视台",Cooking Panda-美国（厨艺熊猫）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-5f07e9fdf313eb0041bbecda.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=ZfsLnzBQFndcmaiReHjb
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=small-120&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fcms%2Fproduction%2Fd3f6d54b-64cf-44ed-a960-2feb1c4b05c7%2FUS_STVP_AnimationPlus_logo_Color_1500x1000_-_Kai_Schneider.png" group-title="动画电视台",Animation-美国（猎奇动画）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-674f6a6cf44561420465f9f3.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=AzSBdFyA5fgLk47xvEyk
+
+#EXTINF:-1 tvg-logo="https://images.plex.tv/photo?size=small-120&scale=2&url=https%3A%2F%2Fprovider-static.plex.tv%2Fepg%2Fcms%2Fproduction%2F6aedfb80-69ab-4b5d-a34b-8e720a753673%2FNEW_KFOOD_Color_Logo-Dark_Background.png" group-title="美食电视台",New-K-Food-韩国（新食尚）
+https://epg.provider.plex.tv/library/parts/5e20b730f2f8d5003d739db7-68b9f5a3d60e5dd29263c7ac.m3u8?includeAllStreams=1&X-Plex-Product=Plex+Mediaverse&X-Plex-Token=DP9wBwVbQ77qgh_meLJ7
+
+#EXTINF:-1 tvg-logo="https://a.jsrdn.com/hls/23195/box-gamers/logo_20250102_230327_70.png" group-title="游戏电视台",Box gamers-墨西哥（box游戏台）
+https://d3s7x6kmqcnb6b.cloudfront.net/d/distro001a/N2IXYNBLLX4DWYFU7VAP/hls3/now,-1m/m.m3u8?ads.dpname=distrotv&ads.channel_name=Box+Gamers&ads.content_id=SKL102&ads.coppa=0&ads.provider=Klasko&ads.rnd=vji9&ads.env_i=beff966d-b08f-4bb0-89d3-31aba75f4d68&ads.env_u=&ads.name=DistroTV&ads.bundle=&ads.storeurl=&ads.appCategory=entertainment&ads.app_version=202105131041&ads.width=418&ads.height=235&ads.deviceId=&ads.deviceDNT=0&ads.gdpr=0&ads.us_privacy=0&ads.aid=&ads.deviceMake=Web&ads.deviceIdType=localStorage&ads.deviceConnectionType=2&ads.deviceCategory=web&ads.client_ip=38.150.11.78&ads.geo=JP&ads.lat=35.61640&ads.long=139.74250&ads.dma=&ads.geoType=2&ads.contentid=23195&ads.content_duration=18000&ads.episode_id=138032&ads.show_id=5277&ads.showCategories=IAB9&ads.episodeCategories=IAB9&ads.genre=Fun%20%26%20Games%2CEsports%2CGaming%2CSpanish&ads.showRating=TV-PG&ads.episodeRating=TV-PG&ads.language=es&ads.showtitle=Box%20Gamers&ads.episodetitle=Box%20Gamers&ads.keywords=Gaming%2CSports&ads.contenturl=&ads.gdprConsent=&ads.paln=&ads.islive=1&ads.streamtype=live&ads.vf=20260104
+
+#EXTINF:-1 tvg-logo="https://yt3.googleusercontent.com/U6hVx2EObQgXJelsx_Z9F5qdQOBpSvy4cqAo8crA73lcwNgAtN_zJC4NxXWaC9E0rzSvl5eZ3w=s900-c-k-c0x00ffffff-no-rj" group-title="体育电视台",Red Bull Bike-奥地利（红牛极限台）
+https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master_3360.m3u8
+
+#EXTINF:-1 tvg-logo="图片链接" group-title="分类名",频道名
+
+
+#EXTINF:-1 tvg-logo="图片链接" group-title="分类名",频道名
+
+#EXTINF:-1 tvg-logo="" group-title="new", New Channel
+
+
+                    ### --- 网络直播 --- ###
+                     
+#EXTINF:-1 tvg-logo="https://www.gstatic.com/youtube/img/branding/youtubeicon/2x/youtube_main_icon_2x_158x110.png" group-title="YouTube",24H憨豆先生
+https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/1768799965/ei/fWptadiGPJSy2roPp8XIuQ0/ip/38.150.11.72/id/lldsi8ItNaI.1/itag/96/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D137/rqh/1/hls_chunk_host/rr4---sn-ogul7n76.googlevideo.com/xpc/EgVo2aDSNQ%3D%3D/playlist_duration/30/manifest_duration/30/gcr/jp/bui/AW-iu_qaJSeuShdOfshPtZJnNpqBtXdRcouK-TI074HKwE8W0VMewxCOsc2UjXE6dAXOXApZvaryk4TT/spc/q5xjPA4RfGRXJ3Cg1fPk/vprv/1/playlist_type/DVR/initcwndbps/5883750/met/1768778366,/mh/t8/mm/44/mn/sn-ogul7n76/ms/lva/mv/m/mvi/4/pl/24/rms/lva,lva/dover/11/pacing/0/keepalive/yes/fexp/51552689,51565115,51565682,51580968/mt/1768777943/sparams/expire,ei,ip,id,itag,source,requiressl,ratebypass,live,sgoap,sgovp,rqh,xpc,playlist_duration,manifest_duration,gcr,bui,spc,vprv,playlist_type/sig/AJfQdSswRQIhAJtbus6Yq7Xx-Isukmvyde7J7MuC-JYaJ-IPE-ZjVHXfAiAA9368T4rCxo-JaMWevAh_HGkUqmU2vykQFr2w0v0Ixg%3D%3D/lsparams/hls_chunk_host,initcwndbps,met,mh,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRQIgFJs0HlwA2YR5ACjFfk-DMNxxY-VmFZAh8mMiXN7r9wACIQDVmMkgFIibOhJ9lZDlkBZBkFbDZCQm63GStWtWZrhJIA%3D%3D/playlist/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://www.gstatic.com/youtube/img/branding/youtubeicon/2x/youtube_main_icon_2x_158x110.png" group-title="YouTube",24H武林外传
+https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/1768799964/ei/fGptadb8JaKW1d8P3MK52AE/ip/38.150.11.72/id/Pp4zaahCN24.1/itag/96/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D137/rqh/1/hls_chunk_host/rr3---sn-oguesn6s.googlevideo.com/xpc/EgVo2aDSNQ%3D%3D/playlist_duration/30/manifest_duration/30/bui/AW-iu_qO5Lo-9SvxcGUstTyZSDQzrsel7Q1briG1M_j6MyjUZ3p5nzWIqTbL4F2V5E_ll_W23ktZGz-g/spc/q5xjPOIAJqbSNscmozsf/vprv/1/playlist_type/DVR/initcwndbps/5883750/met/1768778365,/mh/4z/mm/44/mn/sn-oguesn6s/ms/lva/mv/m/mvi/3/pl/24/rms/lva,lva/dover/11/pacing/0/keepalive/yes/fexp/51552689,51565116,51565682,51580968/mt/1768777943/sparams/expire,ei,ip,id,itag,source,requiressl,ratebypass,live,sgoap,sgovp,rqh,xpc,playlist_duration,manifest_duration,bui,spc,vprv,playlist_type/sig/AJfQdSswRQIgHDzUOb6LG9-5lkjpUy7MsbnYP-JPIgHQC_kWyS4NfGgCIQCQ7_HxIV5hbLgcIEei0rYJNymoiKarTFYTxsixp73rCQ%3D%3D/lsparams/hls_chunk_host,initcwndbps,met,mh,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRQIhAIQYm95TxtxmilMhSBYXyVkWK2TzKHaMJybdOsxuN-lKAiBWny3OrskLA4rBKuVrD32WgqBy5XXbHsmmHwevcqnSdg%3D%3D/playlist/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://www.gstatic.com/youtube/img/branding/youtubeicon/2x/youtube_main_icon_2x_158x110.png" group-title="YouTube",24H三国演义
+https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/1768799965/ei/fWptaZyWIISrpt8Pr6HjgA0/ip/38.150.11.72/id/1hv5TEYJ0pc.1/itag/95/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D136/rqh/1/hls_chunk_host/rr4---sn-oguesn6r.googlevideo.com/xpc/EgVo2aDSNQ%3D%3D/playlist_duration/30/manifest_duration/30/bui/AW-iu_rS6Q779LRXLM72qxHv5BoBH3hcIRpzLa_QvJeQapovMREgQ8NNYAs2_MwtevaJ5WAbhgiS52th/spc/q5xjPPYakyFKkI5mWIaN/vprv/1/playlist_type/DVR/initcwndbps/5883750/met/1768778366,/mh/dc/mm/44/mn/sn-oguesn6r/ms/lva/mv/m/mvi/4/pl/24/rms/lva,lva/dover/11/pacing/0/keepalive/yes/fexp/51552689,51565116,51565682,51580968,51626155/mt/1768777943/sparams/expire,ei,ip,id,itag,source,requiressl,ratebypass,live,sgoap,sgovp,rqh,xpc,playlist_duration,manifest_duration,bui,spc,vprv,playlist_type/sig/AJfQdSswRgIhAMMQ48BUAln_hRxiw7Z68px_c3xyJL5omvOtcOce5juuAiEA9N842QhZTaGGK67zk8jq_QeCf7iN5jjC_t7sw8KkNTw%3D/lsparams/hls_chunk_host,initcwndbps,met,mh,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRQIhAPAZn6s8tRanwKmuprYm4srwZlMR4oi412zSg3wQR3u4AiAGO9Eun9GJzs-GvIKLUjKFJd_mdUtuN6Yk-EHzjD0-1A%3D%3D/playlist/index.m3u8
+
+#EXTINF:-1 group-title="YouTube" tvg-logo="https://www.gstatic.com/youtube/img/branding/youtubeicon/2x/youtube_main_icon_2x_158x110.png",24H第一视角跑酷
+https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/1768799965/ei/fWptab-uNrDi2roPlNyWiA0/ip/38.150.11.72/id/SBajlWdwjSA.1/itag/301/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D299/rqh/1/hls_chunk_host/rr3---sn-oguesn6s.googlevideo.com/xpc/EgVo2aDSNQ%3D%3D/playlist_duration/30/manifest_duration/30/bui/AW-iu_rvAxQXCat1X4-WmUwc6rCVRZtzkJdnm07-0To1VrAy-9AV6Vm_lML-uN5uYDtz2jdCkEWoKzNy/spc/q5xjPOYFq-gtFb1jiUbi/vprv/1/playlist_type/DVR/initcwndbps/5883750/met/1768778366,/mh/vZ/mm/44/mn/sn-oguesn6s/ms/lva/mv/m/mvi/3/pl/24/rms/lva,lva/dover/11/pacing/0/keepalive/yes/fexp/51552689,51565116,51565682,51580968/mt/1768777943/sparams/expire,ei,ip,id,itag,source,requiressl,ratebypass,live,sgoap,sgovp,rqh,xpc,playlist_duration,manifest_duration,bui,spc,vprv,playlist_type/sig/AJfQdSswRgIhAPjSggTctc4JLMOFAHTtHtCuM0pEEcRadgZVaFMOwBVLAiEA9PY4LZ1UFh_tsLY_0_09MpcN_xWtBsvB4szXswMdMe0%3D/lsparams/hls_chunk_host,initcwndbps,met,mh,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRQIhAM27c7gW-DpYFkV2UzL4WDGNR8cw_J2CdpcPthBy2aV6AiBwcjvkSnybKnJvNmldelsTuY_G1VOdvL6xt6aNCbSOIw%3D%3D/playlist/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://www.gstatic.com/youtube/img/branding/youtubeicon/2x/youtube_main_icon_2x_158x110.png" group-title="YouTube",24H猫和老鼠
+https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/1768799964/ei/fGptaZmjGdPr2roPrbnXiAc/ip/38.150.11.72/id/rEKifG2XUZg.1/itag/95/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D136/rqh/1/hls_chunk_host/rr2---sn-oguesn6r.googlevideo.com/xpc/EgVo2aDSNQ%3D%3D/playlist_duration/30/manifest_duration/30/gcr/jp/bui/AW-iu_oeCifEIIr9h2kA5pfG5wsSbTppYz3Zn0mzTs7ov6M-ImsdOMr4zcBXx8iGs2lXQtRdVzYvXpWf/spc/q5xjPPdHJc8KixYakSHl/vprv/1/playlist_type/DVR/initcwndbps/5883750/met/1768778365,/mh/6S/mm/44/mn/sn-oguesn6r/ms/lva/mv/m/mvi/2/pl/24/rms/lva,lva/dover/11/pacing/0/keepalive/yes/fexp/51552689,51565116,51565681,51580968/mt/1768777943/sparams/expire,ei,ip,id,itag,source,requiressl,ratebypass,live,sgoap,sgovp,rqh,xpc,playlist_duration,manifest_duration,gcr,bui,spc,vprv,playlist_type/sig/AJfQdSswRgIhANdzSWXa--I-f19X_hhdHFGJqp81mwYcG3sMzH7AC_r7AiEA8MNbmobl3Qg6DYJnRs4FCdpRBaN6sT3TAjwRqxirS5A%3D/lsparams/hls_chunk_host,initcwndbps,met,mh,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRAIgcq5U4I6aqMZlFjp5WS1xwOS0UThmGT1S9nnXc8FqK0YCIEzh28xe9tPPCmeu0Bp5BQBXgP7STBMUzGnoNEqNKMys/playlist/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://www.gstatic.com/youtube/img/branding/youtubeicon/2x/youtube_main_icon_2x_158x110.png" group-title="YouTube",24H-海绵宝宝
+https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/1768799965/ei/fWptaZrQO43lpt8P3-6juQI/ip/38.150.11.72/id/NC5JgC4FDCw.1/itag/300/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D298/rqh/1/hls_chunk_host/rr5---sn-oguesn6d.googlevideo.com/xpc/EgVo2aDSNQ%3D%3D/playlist_duration/30/manifest_duration/30/gcr/jp/bui/AW-iu_qachukFjchgXKedMM1xC1Z8WZ9BCeUKZqpDgNmJxNBiezgV09aRkb5OSAwLk-rbJIClhyeMAa2/spc/q5xjPKQ4cKyPy-tucNp4/vprv/1/playlist_type/DVR/initcwndbps/5661250/met/1768778366,/mh/y_/mm/44/mn/sn-oguesn6d/ms/lva/mv/m/mvi/5/pl/24/rms/lva,lva/dover/11/pacing/0/keepalive/yes/fexp/51552689,51565116,51565682,51580968/mt/1768778182/sparams/expire,ei,ip,id,itag,source,requiressl,ratebypass,live,sgoap,sgovp,rqh,xpc,playlist_duration,manifest_duration,gcr,bui,spc,vprv,playlist_type/sig/AJfQdSswRAIgfV91yDHUwqDPHJAsdiTzUs9w-8GeMpLrQ2bV1qlm2nYCIFijLOPg5KM9mt0AFlX2xRLB_moXH9k52l7uB6IheZsr/lsparams/hls_chunk_host,initcwndbps,met,mh,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRgIhAJd5dhzoaOeoo-5k2mdZXt3qFBe0L2o8sQShk4P8Ztf_AiEAvkiEV6mBWf2YSfL_SKwCdnRL6f50wnprqVicwgfczKw%3D/playlist/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://www.gstatic.com/youtube/img/branding/youtubeicon/2x/youtube_main_icon_2x_158x110.png" group-title="YouTube",24H星际宝贝
+https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/1768799965/ei/fWptaYyqOt-mvcAPnfLD2Q8/ip/38.150.11.72/id/F4Tnje7wi-o.1/itag/96/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D137/rqh/1/hls_chunk_host/rr3---sn-oguesn6y.googlevideo.com/xpc/EgVo2aDSNQ%3D%3D/playlist_duration/30/manifest_duration/30/gcr/jp/bui/AW-iu_rcGwlm7PRJRdhtnAwvjCJLo0q0wrqArivMFQJQHHdAuEt7I7vhN2iuIH9HLaveLSDsQ1v-GV7I/spc/q5xjPADeg5v05_LbbWxy/vprv/1/playlist_type/DVR/initcwndbps/5883750/met/1768778366,/mh/wV/mm/44/mn/sn-oguesn6y/ms/lva/mv/m/mvi/3/pl/24/rms/lva,lva/dover/11/pacing/0/keepalive/yes/fexp/51552689,51565115,51565681,51580968/mt/1768777943/sparams/expire,ei,ip,id,itag,source,requiressl,ratebypass,live,sgoap,sgovp,rqh,xpc,playlist_duration,manifest_duration,gcr,bui,spc,vprv,playlist_type/sig/AJfQdSswRAIgKVn-Tdj7Khhvej_vw_sJcCjAsNXLzPtu_l25c2215HcCIDAd4jcK55xCT7fElPbxIhHXrg9bP6acU0zWaD_-pchU/lsparams/hls_chunk_host,initcwndbps,met,mh,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRAIgJ7EmlNijy8PBXj3ah7UtyFpBCNZ29So5iJ2Mw5J-NusCIE7njct9wGDWbaG4QP9LjxeDkH-E2NJOcaaxP0GJi8Nr/playlist/index.m3u8
+
+#EXTINF:-1 group-title="YouTube" tvg-logo="https://www.gstatic.com/youtube/img/branding/youtubeicon/2x/youtube_main_icon_2x_158x110.png",24H火柴人动画
+https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/1768799964/ei/fGptabCgG-Kz2roP64vW4A0/ip/38.150.11.72/id/nuSAAK6W5hY.1/itag/96/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D137/rqh/1/hls_chunk_host/rr5---sn-ogul7n7k.googlevideo.com/xpc/EgVo2aDSNQ%3D%3D/playlist_duration/30/manifest_duration/30/bui/AW-iu_rQywrhrRjT46D7FzZ9eF6QP0lU7gc4PKCllR9wfwaS0mtMyZ27eDZUTjmmgIRXnVSjs2H2r-M-/spc/q5xjPFZ-QdvoUNHDq2X1/vprv/1/playlist_type/DVR/initcwndbps/5661250/met/1768778365,/mh/D4/mm/44/mn/sn-ogul7n7k/ms/lva/mv/m/mvi/5/pl/24/rms/lva,lva/dover/11/pacing/0/keepalive/yes/fexp/51552689,51565115,51565682,51580968/mt/1768778182/sparams/expire,ei,ip,id,itag,source,requiressl,ratebypass,live,sgoap,sgovp,rqh,xpc,playlist_duration,manifest_duration,bui,spc,vprv,playlist_type/sig/AJfQdSswRAIgTNJjxqWupnHeQmNRvhBXxpELKmsjDoYhA6l_Y6KbTLwCIDIo_TTg2mUzkwHaY6tQjVsNKxBrOxRbquFzbBbTImtk/lsparams/hls_chunk_host,initcwndbps,met,mh,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRQIgYwapL79QVsWqDuEay2bh_xBXa9Bltql3bUFYMrv_4cICIQCxeKaZcOhNhkd7GHPAPxHqaMfPzFhiQDtZUJM8EUDx5w%3D%3D/playlist/index.m3u8
+
+#EXTINF:-1 group-title="YouTube" tvg-logo="https://www.gstatic.com/youtube/img/branding/youtubeicon/2x/youtube_main_icon_2x_158x110.png",24H-AI山海经
+https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/1768799965/ei/fWptaZCTFNybvcAPibeT-AM/ip/38.150.11.72/id/al4rG3dpKEA.1/itag/96/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D137/rqh/1/hls_chunk_host/rr5---sn-ogul7ne6.googlevideo.com/xpc/EgVo2aDSNQ%3D%3D/playlist_duration/30/manifest_duration/30/bui/AW-iu_ovo12YcnzrjZ4H5irXKnL1bzmMuDeTSuTtuRW_TpyHsrCKtrO1u1PZwmAGdroC_9BL7ewV74T6/spc/q5xjPLRAvggipt3MlFj_/vprv/1/playlist_type/DVR/initcwndbps/5883750/met/1768778366,/mh/3x/mm/44/mn/sn-ogul7ne6/ms/lva/mv/m/mvi/5/pl/24/rms/lva,lva/dover/11/pacing/0/keepalive/yes/fexp/51552689,51565116,51565682,51580968,51626155/mt/1768777943/sparams/expire,ei,ip,id,itag,source,requiressl,ratebypass,live,sgoap,sgovp,rqh,xpc,playlist_duration,manifest_duration,bui,spc,vprv,playlist_type/sig/AJfQdSswRgIhAOMHVroOhnI9WTwvNJ7wDQKBdqBaz3xBB3T8mAXSITImAiEAyAt6YM0Bd4BmlH-mzhUvciUxKNEzD9ihv3BfqOxFMVQ%3D/lsparams/hls_chunk_host,initcwndbps,met,mh,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRgIhANcjTuo7x-4CkVM3TYw6pC5rn-d1BE-NLokV02ymRsYxAiEAyzC9_n7hpXqEpHAW9i7NE8ve-U8bjfdN5QA3kjIiF_s%3D/playlist/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://www.gstatic.com/youtube/img/branding/youtubeicon/2x/youtube_main_icon_2x_158x110.png" group-title="YouTube",狗狗TV
+https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/1768799964/ei/fGptad-FE4Cz1d8PlNPksAE/ip/38.150.11.72/id/hyBHEskxzw8.1/itag/96/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D137/rqh/1/hls_chunk_host/rr1---sn-oguesnd7.googlevideo.com/xpc/EgVo2aDSNQ%3D%3D/playlist_duration/30/manifest_duration/30/gcr/jp/bui/AW-iu_oPkHqgyO5UH28EToErNU5Cwd0YVYNQxmkNTOEs_m0MrARqoZxcfhK6f-3Yj8qFaaW_LyGxJrMW/spc/q5xjPCUTeesgJpXH0FQU/vprv/1/playlist_type/DVR/initcwndbps/5883750/met/1768778365,/mh/rO/mm/44/mn/sn-oguesnd7/ms/lva/mv/m/mvi/1/pl/24/rms/lva,lva/dover/11/pacing/0/keepalive/yes/fexp/51552689,51565116,51565681,51580968,51626154/mt/1768777943/sparams/expire,ei,ip,id,itag,source,requiressl,ratebypass,live,sgoap,sgovp,rqh,xpc,playlist_duration,manifest_duration,gcr,bui,spc,vprv,playlist_type/sig/AJfQdSswRQIhAL3wXHXALp0o2tMiuKGvwY66SICGDz8KhHnjc9lOAQfKAiBbBwmLRXx-hoxwBq3NVNUTLj_JEGqunp-TUNiLbgxnVA%3D%3D/lsparams/hls_chunk_host,initcwndbps,met,mh,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRgIhAIJv_zCXatcTT2-4J1hF5IO4EuTWNmh_Yt20QxTE_VLiAiEA6iwLBLvn5P3rKG5n8LApX3dfPuZ1htNm_nUEfzMAk4A%3D/playlist/index.m3u8
+
+#EXTINF:-1 group-title="YouTube" tvg-logo="https://www.gstatic.com/youtube/img/branding/youtubeicon/2x/youtube_main_icon_2x_158x110.png",24H周杰伦电台
+https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/1768799963/ei/e2ptaee9K_2z2roP_tKs4Aw/ip/38.150.11.72/id/q8hw5oKCDp4.1/itag/96/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D137/rqh/1/hls_chunk_host/rr2---sn-ogul7n76.googlevideo.com/xpc/EgVo2aDSNQ%3D%3D/playlist_duration/30/manifest_duration/30/bui/AW-iu_ogGf5Ujx1F3SeXK4lQ8JOHSFpOi2gU2P2rXwmy8NFeWqiE2zvGRyuuPn5egp1WBjX-h8kjwIuk/spc/q5xjPEyME60LlJGxcjaVyWhJYLAE4RfbZvWNwAz6hOc8aOffNof-zxJa2qJmgBKHINM/vprv/1/ns/fD6yrzCblyQNT-of24IT6XIR/playlist_type/DVR/initcwndbps/5883750/met/1768778366,/mh/6u/mm/44/mn/sn-ogul7n76/ms/lva/mv/m/mvi/2/pl/24/rms/lva,lva/dover/11/pacing/0/keepalive/yes/fexp/51331020,51552689,51565116,51565682,51580968/n/2YE75oCK62WC_Uanwe3/mt/1768777943/sparams/expire,ei,ip,id,itag,source,requiressl,ratebypass,live,sgoap,sgovp,rqh,xpc,playlist_duration,manifest_duration,bui,spc,vprv,ns,playlist_type/sig/AJfQdSswRQIgZ3V5dqs4gaS4Cx3GnsZGXYaulklFwcs0g2Nvl1yxC8kCIQDsryYQAgENYzFvLktKZSg7kGOJUM28A3zQV5V_cy6O1g%3D%3D/lsparams/hls_chunk_host,initcwndbps,met,mh,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRQIgVg80x4qF-ryEtlYWrA7mP-m_G25o9gUAwgvJ-aNxePICIQChZCOneLnEC4smttUpez3RaveoGcVxwBwoVTw9Rlbb8g%3D%3D/playlist/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/dark/bilibili-color.png" group-title="BiliBili",24H央视网
+https://live.bilibili.com/8178490
+
+                    ### --- 独家在线轮播 --- ###
+
+#EXTINF:-1 tvg-logo="https://www.gstatic.com/youtube/img/branding/youtubeicon/2x/youtube_main_icon_2x_158x110.png" group-title="YouTube",24H老马拍案轮播
+http://127.0.0.1:10000/vod/681f0353.m3u8
+
+#EXTINF:-1 tvg-logo="https://www.gstatic.com/youtube/img/branding/youtubeicon/2x/youtube_main_icon_2x_158x110.png" group-title="YouTube",24H动漫收藏夹
+http://127.0.0.1:10000/random/4362f9e5/playlist.m3u8
+
+                    ### --- 在线电影 --- ###
+
+#EXTINF:-1 tvg-logo="https://32d.cc/upload/vod/20250727-17/f071930f43e8d60f2f70ebe5a08ef6f5.jpg" vod-type="movie" group-title="在线电影",新·奥特曼（普通话版）（抓的网站源，中途有广告）
+https://hn.bfvvs.com/play/hls/epYYkK2a/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://32d.cc/upload/vod/20250727-17/f071930f43e8d60f2f70ebe5a08ef6f5.jpg" vod-type="movie" group-title="在线电影",新·奥特曼 （日语）（抓的网站源，中途有广告）
+https://hn.bfvvs.com/play/hls/aKrrLVze/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://32d.cc/upload/vod/20250912-1/12ee437e847cd713116bd42ad7ceb17c.jpg" vod-type="movie" group-title="在线电影",孤独的美食家剧场版（抓的网站源，中途有广告）
+https://hn.bfvvs.com/play/hls/mepOYm1d/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://32d.cc/upload/vod/20250729-17/62e283dce538816c7240bd9662fbbb26.jpg" vod-type="movie" group-title="在线电影",菊次郎的夏天（抓的网站源，中途有广告）
+https://hn.bfvvs.com/play/hls/YerxmWbO/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://32d.cc/upload/vod/20260107-4/4cc967a7892a70bf3ef366dd07527a0a.jpg" group-title="在线电影",厨子戏子痞子（抓的网站源，中途有广告）
+https://vip.ffzy-play6.com/20221021/447_11225dde/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://32d.cc/upload/vod/20260106-8/e7faba6554fb52c06dfb34a499fdf8ff.jpg" group-title="在线电影",囧男孩（抓的网站源，中途有广告）
+https://vip.ffzy-online2.com/20230103/5687_93aa7637/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://32d.cc/upload/vod/20260106-22/ce2865b0bfcc46ee6e67f84e42d39765.jpg" group-title="在线电影",愤怒的小孩（抓的网站源，中途有广告）
+https://vip.ffzy-play7.com/20221123/6598_70959112/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://32d.cc/upload/vod/20260107-4/4b3a31b391a38c3e93fbe49d1f87805b.jpg" group-title="在线电影",嘻游记（抓的网站源，中途有广告）
+https://vip.ffzy-play6.com/20221022/1023_fae8e09f/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://32d.cc/upload/vod/20260107-4/27c8ca40818357483c8a5862ffb38a2f.jpg" group-title="在线电影",笑功震武林（抓的网站源，中途有广告）
+https://vip.ffzy-play6.com/20221021/590_9470ecda/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://32d.cc/upload/vod/20260107-5/68962a7b0b80658c64ead5e245549091.jpg" group-title="在线电影",王牌情敌（抓的网站源，中途有广告）
+https://vip.ffzy-play6.com/20221020/388_4c66d72f/3000k/hls/mixed.m3u8
+
+#EXTINF:-1 tvg-logo="https://32d.cc/upload/vod/20260107-3/3be2e11da8b0312d183bc0d645046226.jpg" group-title="在线电影",石器时代之百万大侦探（抓的网站源，中途有广告）
+https://vip.ffzy-play6.com/20221023/1527_948d92d4/index.m3u8
+
+#EXTINF:-1 tvg-logo="图片链接" group-title="分类名",频道名
+
+
+#EXTINF:-1 tvg-logo="图片链接" group-title="分类名",频道名
+
+
