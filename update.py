@@ -98,10 +98,7 @@ def get_real_url(url, channel_name, retry_mode=False):
     # [关键修改] 针对直播流，强制优先获取 m3u8 (HLS) 协议
     # best[protocol^=m3u8] 会优先选 HLS，这比 mp4 更适合直播，且不易断流
     if is_yt:
-        # 修改说明: 移除 '/best' 后备选项，强制只获取 HLS (m3u8) 链接。
-        # 这样 yt-dlp 仅会返回单个包含音视频的 master playlist 链接，
-        # 避免了因回退到 DASH 格式而返回两个分离链接 (视频+音频) 的情况。
-        cmd.extend(['-f', 'best[protocol^=m3u8]'])
+        cmd.extend(['-f', 'best[protocol^=m3u8]/best'])
     else:
         cmd.extend(['-f', 'best[ext=mp4]/best']) 
     
