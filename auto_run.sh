@@ -31,16 +31,13 @@ do
         echo "☁️ [Git] 正在同步..."
         git add .
         
-        # 检查是否有变动
-        if git status --porcelain | grep -q .; then
-            git commit -m "Auto Update: $(date +'%H:%M')"
-            if ! git push; then
-                log_error "Git 推送失败 (网络或权限)"
-            else
-                echo "✅ [完成] 仓库已更新"
-            fi
+        # ⚠️ 修改点：强制提交，允许空提交 (--allow-empty)，确保每次都上传
+        git commit --allow-empty -m "Auto Update: $(date +'%H:%M')"
+        
+        if ! git push; then
+            log_error "Git 推送失败 (网络或权限)"
         else
-            echo "💤 [跳过] 链接无变化"
+            echo "✅ [完成] 仓库已更新 (强制同步)"
         fi
     fi
     
