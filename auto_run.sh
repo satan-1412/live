@@ -7,6 +7,8 @@
 
 TRIGGER_FILE="run_now_signal"
 ERROR_LOG="error.log"
+# 💖 琉璃小提示：这里定义好绝对路径，防止迷路
+WORK_DIR="/sdcard/live"
 
 # --- 异常记录 ---
 log_error() {
@@ -14,6 +16,9 @@ log_error() {
     echo "$msg"
     echo "$msg" >> "$ERROR_LOG"
 }
+
+# 💖 琉璃小提示：启动脚本时先进入正确目录
+cd "$WORK_DIR" || exit
 
 while true
 do
@@ -29,6 +34,11 @@ do
     else
         # Git 同步流程
         echo "☁️ [Git] 正在同步..."
+        
+        # 🟢【关键修改在这里！】🟢
+        # 每次操作 Git 前，强制重新进入一次目录，确立“地基”
+        cd "$WORK_DIR"
+        
         git add .
         
         # ⚠️ 修改点：强制提交，允许空提交 (--allow-empty)，确保每次都上传
