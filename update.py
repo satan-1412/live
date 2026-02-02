@@ -2,7 +2,9 @@ import json
 import subprocess
 import os
 import time
-import urllib.parse
+import re
+import requests
+import urllib3
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # ==========================================
@@ -10,6 +12,9 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # ==========================================
 TARGET_FILES = ['TV.m3u8', 'no sex/TV_1(no sex).m3u8']
 JSON_FILE = 'streams.json'
+
+# 屏蔽 requests 请求 verify=False 时的烦人警告，保持界面清爽
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 UA_LIST = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -88,37 +93,77 @@ def process_smart_cookies():
         print(f"    [鉴权中心] ❌ 凭证处理流程致命错误: {e}")
         return False
 
-# --- 核心解析模块 (直播流优化版) ---
+# --- 深度网页嗅探器 (Web Sniffer - Requests版) ---
+def sniff_m3u8_from_web(url, ua):
+    """
+    [兜底逻辑] 模拟 Web Video Caster，使用 requests 高级库进行嗅探
+    """
+    try:
+        headers = {
+            'User-Agent': ua,
+            'Referer': url,  # 很多网站检查 Referer
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+        }
+        # verify=False 忽略证书错误，allow_redirects=True 允许跳转
+        response = requests.get(url, headers=headers, timeout=15, verify=False, allow_redirects=True)
+        response.encoding = response.apparent_encoding # 自动识别编码，防止乱码
+        
+        html = response.text
+        
+        # 正则匹配：寻找 http/https 开头，.m3u8 结尾的字符串
+        # 兼容转义字符 (例如 \/ -> /)
+        pattern = r'(http[s]?:\\?/\\?/[^\s"\'<>]+?\.m3u8[^\s"\'<>]*)'
+        matches = re.findall(pattern, html)
+        
+        if matches:
+            # 取第一个匹配项，并处理转义斜杠
+            found_url = matches[0].replace('\\/', '/')
+            return found_url
+    except Exception:
+        # requests 的异常我们静默处理
+        pass
+    return None
+
+# --- 核心解析模块 (混合引擎版) ---
 def get_real_url(url, channel_name, retry_mode=False):
     is_yt = 'youtube.com' in url or 'youtu.be' in url
+    current_ua = get_random_ua()
     
-    # 使用随机 UA 避免封锁
-    cmd = ['yt-dlp', '-g', '--no-playlist', '--no-check-certificate', '--user-agent', get_random_ua()]
+    # -------------------------------
+    # 策略 A: yt-dlp 标准解析
+    # -------------------------------
+    cmd = ['yt-dlp', '-g', '--no-playlist', '--no-check-certificate', '--user-agent', current_ua]
     
-    # [关键修改] 针对直播流，强制优先获取 m3u8 (HLS) 协议
-    # best[protocol^=m3u8] 会优先选 HLS，这比 mp4 更适合直播，且不易断流
+    # 针对 YouTube 强制 HLS，针对通用网站优先 HLS 允许回退
     if is_yt:
         cmd.extend(['-f', 'best[protocol^=m3u8]/best'])
-    else:
-        cmd.extend(['-f', 'best[ext=mp4]/best']) 
-    
-    if is_yt:
         cmd.extend(['--referer', 'https://www.youtube.com/'])
-        if os.path.exists(COOKIE_TEMP_FILE): cmd.extend(['--cookies', COOKIE_TEMP_FILE])     
+        if os.path.exists(COOKIE_TEMP_FILE): cmd.extend(['--cookies', COOKIE_TEMP_FILE])
+    else:
+        # 非油管：尝试通用提取器，移除 mp4 限制，让它自己找
+        cmd.extend(['--referer', url])
+    
     cmd.append(url)
     
     try:
-        # 增加一点超时时间，因为 live 解析有时比较慢
-        res = subprocess.run(cmd, capture_output=True, text=True, timeout=50)
+        res = subprocess.run(cmd, capture_output=True, text=True, timeout=45)
         if res.returncode == 0:
             raw_output = res.stdout.strip()
             real_url = raw_output.split('\n')[0] if raw_output else None
-            
             if real_url and 'http' in real_url:
                 return channel_name, real_url, True
-    except Exception as e:
+    except:
         pass
-    
+
+    # -------------------------------
+    # 策略 B: 深度挖掘 (仅非 YouTube 触发)
+    # -------------------------------
+    if not is_yt:
+        # 如果 yt-dlp 失败，尝试模拟浏览器嗅探 M3U8 (调用 requests 版)
+        sniffed_url = sniff_m3u8_from_web(url, current_ua)
+        if sniffed_url:
+            return channel_name, sniffed_url, True
+
     return channel_name, None, False
 
 # --- 主程序入口 ---
@@ -135,7 +180,6 @@ def update_streams():
         print(f"❌ JSON 配置文件格式错误: {e}")
         return
 
-    # 移除合集任务处理逻辑
     if "Run_Series_Loop" in data:
         data.pop("Run_Series_Loop") 
     
@@ -147,7 +191,6 @@ def update_streams():
     extract(data)
 
     unique_tasks = {}
-    # 读取原有 M3U8 以保持排序
     for m in TARGET_FILES:
         if os.path.exists(m):
             with open(m, 'r', encoding='utf-8') as f:
@@ -156,9 +199,7 @@ def update_streams():
                         name = line.split(',')[-1].strip()
                         if name in stream_map: unique_tasks[name] = stream_map[name]
 
-    # 过滤出需要更新的直播任务
     live_tasks = [(k, v) for k, v in unique_tasks.items()]
-
     failed_channels = []
     
     print(f">>> [任务就绪] 直播队列: {len(live_tasks)}")
@@ -180,7 +221,10 @@ def update_streams():
                 for future in as_completed(futures):
                     n, u, success = future.result()
                     if success and u:
-                        print(f"   ✅ [解析成功] {n}")
+                        # 检测是否是通过嗅探获取的链接 (简单的逻辑判断)
+                        is_sniffed = '.m3u8' in u and 'googlevideo' not in u and 'bilivideo' not in u
+                        tag = "🔍 [网页嗅探]" if is_sniffed else "✅ [解析成功]"
+                        print(f"   {tag} {n}") 
                         unique_tasks[n] = u
                     else:
                         print(f"   🌪️ [暂缓处理] {n}")
