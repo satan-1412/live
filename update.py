@@ -17,21 +17,18 @@ JSON_FILE = 'streams.json'
 # 屏蔽 requests 警告
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# 普通下载用的 UA (混合)
-UA_LIST = [
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15',
-]
-
-# 📱 [关键修改] 嗅探专用：强力安卓 UA (模拟 Web Video Caster)
-MOBILE_UA = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36'
+# ==========================================
+# 🎭 身份伪装库 (User-Agent Pool)
+# ==========================================
+# 策略：针对国内电视台，优先使用移动端 UA，因为它们通常会直接暴露 HLS 链接
+UA_POOL = {
+    "Android": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36",
+    "iOS": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1",
+    "PC": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+}
 
 BATCH_SIZE = 10     
 COOKIE_TEMP_FILE = 'cookies_netscape.txt'
-
-def get_random_ua():
-    import random
-    return random.choice(UA_LIST)
 
 # ==========================================
 # 🔐 鉴权凭证处理
@@ -52,7 +49,7 @@ def process_smart_cookies():
     if not content: return False
 
     try:
-        # 处理 JSON 或 Netscape 格式... (保持原逻辑不变)
+        # 兼容 JSON 和 Netscape 格式
         if content.startswith('[') or content.startswith('{'):
             try:
                 data = json.loads(content)
@@ -90,13 +87,16 @@ def process_smart_cookies():
 # --- 🕸️ 暴力网页嗅探器 (Hunter Mode) ---
 def clean_url(url):
     """清理并验证 URL"""
-    # 1. 解码 URL 编码 (http%3A%2F%2F -> http://)
-    url = urllib.parse.unquote(url)
-    # 2. 处理 JSON Unicode 转义 (\u002F -> /)
-    url = url.encode('utf-8').decode('unicode_escape')
-    # 3. 处理反斜杠转义 (\/ -> /)
-    url = url.replace('\\/', '/')
-    return url
+    try:
+        # 1. 解码 URL 编码 (http%3A%2F%2F -> http://)
+        url = urllib.parse.unquote(url)
+        # 2. 处理 JSON Unicode 转义 (\u002F -> /)
+        url = url.encode('utf-8').decode('unicode_escape')
+        # 3. 处理反斜杠转义 (\/ -> /)
+        url = url.replace('\\/', '/')
+        return url.strip()
+    except:
+        return url
 
 def find_m3u8_deep(text):
     """
@@ -114,30 +114,29 @@ def find_m3u8_deep(text):
     candidates.extend(matches2)
 
     # 清洗并去重
-    valid_urls = []
     for u in candidates:
         clean = clean_url(u)
-        if 'http' in clean and '.m3u8' in clean:
-            valid_urls.append(clean)
+        # 过滤非 m3u8 或过短的无效链接
+        if 'http' in clean and '.m3u8' in clean and len(clean) > 10:
+            return clean # 找到第一个看似有效的就返回
     
-    return valid_urls[0] if valid_urls else None
+    return None
 
-def sniff_m3u8_from_web(url, depth=0):
-    """
-    [兜底逻辑] 模拟手机浏览器访问，支持 iframe 穿透
-    """
-    if depth > 1: return None # 防止无限递归
+def sniff_single_ua(url, ua, depth=0):
+    """单次嗅探逻辑"""
+    if depth > 1: return None 
 
     try:
-        # ⚡ 关键：使用 MOBILE_UA 伪装成安卓手机
         headers = {
-            'User-Agent': MOBILE_UA,
-            'Referer': url,
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+            'User-Agent': ua,
+            'Referer': url, # 关键：很多网站检查来源
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
         }
         
-        response = requests.get(url, headers=headers, timeout=15, verify=False, allow_redirects=True)
-        response.encoding = response.apparent_encoding # 自动纠正编码
+        # 增加 verify=False 忽略证书错误
+        response = requests.get(url, headers=headers, timeout=10, verify=False, allow_redirects=True)
+        response.encoding = response.apparent_encoding 
         html = response.text
         
         # 1. 🔍 第一轮：直接暴力搜索当前页面的 m3u8
@@ -145,18 +144,15 @@ def sniff_m3u8_from_web(url, depth=0):
         if found_url: return found_url
 
         # 2. 📡 第二轮：扫描内嵌窗口 (Iframe) -> 穿透
-        # 很多电视台会把播放器藏在 iframe 里
         iframe_pattern = r'<iframe[^>]+src=["\']([^"\']+)["\']'
         iframes = re.findall(iframe_pattern, html, re.I)
         
         for iframe_src in iframes:
-            # 补全相对路径
             full_iframe_url = urllib.parse.urljoin(url, iframe_src)
-            # 过滤垃圾广告
             if 'ad' in full_iframe_url or 'google' in full_iframe_url: continue
 
             # 递归：钻进去找
-            deep_found = sniff_m3u8_from_web(full_iframe_url, depth + 1)
+            deep_found = sniff_single_ua(full_iframe_url, ua, depth + 1)
             if deep_found: return deep_found
 
     except Exception:
@@ -168,10 +164,10 @@ def get_real_url(url, channel_name, retry_mode=False):
     is_yt = 'youtube.com' in url or 'youtu.be' in url
     
     # -------------------------------
-    # 策略 A: yt-dlp 标准解析 (优先用于油管)
+    # 策略 A: 油管专用 (yt-dlp)
     # -------------------------------
     if is_yt:
-        cmd = ['yt-dlp', '-g', '--no-playlist', '--no-check-certificate', '--user-agent', get_random_ua()]
+        cmd = ['yt-dlp', '-g', '--no-playlist', '--no-check-certificate', '--user-agent', UA_POOL["PC"]]
         cmd.extend(['-f', 'best[protocol^=m3u8]/best'])
         cmd.extend(['--referer', 'https://www.youtube.com/'])
         if os.path.exists(COOKIE_TEMP_FILE): cmd.extend(['--cookies', COOKIE_TEMP_FILE])
@@ -185,23 +181,33 @@ def get_real_url(url, channel_name, retry_mode=False):
         except: pass
     
     # -------------------------------
-    # 策略 B: 强力网页嗅探 (主要用于非油管、国内电视台)
+    # 策略 B: 网站轮询嗅探 (多 UA 轮战)
     # -------------------------------
     else:
-        # 先尝试 yt-dlp (万一它支持)
-        cmd = ['yt-dlp', '-g', '--no-playlist', '--no-check-certificate', '--user-agent', get_random_ua()]
-        cmd.append(url)
-        try:
-            res = subprocess.run(cmd, capture_output=True, text=True, timeout=20)
-            if res.returncode == 0:
-                raw = res.stdout.strip().split('\n')[0]
-                if raw and 'http' in raw: return channel_name, raw, True
-        except: pass
-
-        # 如果 yt-dlp 失败，启动 Python 暴力嗅探
-        sniffed_url = sniff_m3u8_from_web(url)
-        if sniffed_url:
-            return channel_name, sniffed_url, True
+        # 定义轮询顺序：安卓 -> iOS -> 电脑
+        # 手机端通常更容易获得无加密的 HLS 流
+        ua_order = ["Android", "iOS", "PC"]
+        
+        for ua_type in ua_order:
+            current_ua = UA_POOL[ua_type]
+            
+            # 1. 尝试 Python 暴力嗅探
+            sniffed_url = sniff_single_ua(url, current_ua)
+            if sniffed_url:
+                # 找到后直接返回，不再尝试其他 UA
+                return channel_name, sniffed_url, True
+            
+            # 2. 如果嗅探失败，尝试用当前 UA 跑一次 yt-dlp (捡漏)
+            cmd = ['yt-dlp', '-g', '--no-playlist', '--no-check-certificate', '--user-agent', current_ua]
+            cmd.append(url)
+            try:
+                res = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
+                if res.returncode == 0:
+                    raw = res.stdout.strip().split('\n')[0]
+                    if raw and 'http' in raw: return channel_name, raw, True
+            except: pass
+            
+            # 如果当前 UA 失败，循环继续，尝试下一个 UA...
 
     return channel_name, None, False
 
@@ -267,7 +273,7 @@ def update_streams():
                         if orig: failed_channels.append((n, orig))
             time.sleep(0.5)
 
-    # Phase 2: 重试
+    # Phase 2: 重试 (最终挽救)
     if failed_channels:
         print(f"\n========================================")
         print(f"🔄 [最终挽救] 集中处理所有异常任务...")
@@ -277,7 +283,8 @@ def update_streams():
         for idx, (n, u) in enumerate(failed_channels):
             print(f"   🛠️ [正在修复] {n} ...")
             retry_success = False
-            for r_attempt in range(1, 3):
+            # 重试时，get_real_url 会再次跑一遍完整的 UA 轮询逻辑
+            for r_attempt in range(1, 2): 
                 _, new_u, success = get_real_url(u, n, True)
                 if success and new_u:
                     print(f"      ✅ [回滚成功] 链路已恢复")
@@ -285,7 +292,7 @@ def update_streams():
                     retry_success = True
                     break
                 else:
-                    time.sleep(2)
+                    time.sleep(1)
             if not retry_success: print(f"      ❌ [最终熔断] 无法接通，已弃用")
 
     # I/O 写入
