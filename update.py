@@ -5,6 +5,7 @@ import time
 import re
 import requests
 import urllib3
+import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # ==========================================
@@ -93,34 +94,65 @@ def process_smart_cookies():
         print(f"    [鉴权中心] ❌ 凭证处理流程致命错误: {e}")
         return False
 
-# --- 深度网页嗅探器 (Web Sniffer - Requests版) ---
-def sniff_m3u8_from_web(url, ua):
+# --- 深度网页嗅探器 (Web Sniffer - 穿透版) ---
+def find_m3u8_in_html(html):
     """
-    [兜底逻辑] 模拟 Web Video Caster，使用 requests 高级库进行嗅探
+    [辅助功能] 在 HTML 文本中正则匹配 m3u8
     """
+    # 模式1: 标准 http 开头的 m3u8
+    # 模式2: 相对路径 /xxx/xxx.m3u8 (简单匹配)
+    # 增加对转义字符的处理 (如 \/)
+    try:
+        pattern = r'(http[s]?:\\?/\\?/[^\s"\'<>]+?\.m3u8[^\s"\'<>]*)'
+        matches = re.findall(pattern, html)
+        if matches:
+            return matches[0].replace('\\/', '/')
+    except:
+        pass
+    return None
+
+def sniff_m3u8_from_web(url, ua, depth=0):
+    """
+    [兜底逻辑] 模拟 Web Video Caster，支持 Iframe 穿透
+    """
+    # 防止无限递归，限制穿透层数为 2 层
+    if depth > 1: return None
+
     try:
         headers = {
             'User-Agent': ua,
-            'Referer': url,  # 很多网站检查 Referer
+            'Referer': url,
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
         }
-        # verify=False 忽略证书错误，allow_redirects=True 允许跳转
-        response = requests.get(url, headers=headers, timeout=15, verify=False, allow_redirects=True)
-        response.encoding = response.apparent_encoding # 自动识别编码，防止乱码
         
+        # 请求网页
+        response = requests.get(url, headers=headers, timeout=10, verify=False, allow_redirects=True)
+        response.encoding = response.apparent_encoding
         html = response.text
         
-        # 正则匹配：寻找 http/https 开头，.m3u8 结尾的字符串
-        # 兼容转义字符 (例如 \/ -> /)
-        pattern = r'(http[s]?:\\?/\\?/[^\s"\'<>]+?\.m3u8[^\s"\'<>]*)'
-        matches = re.findall(pattern, html)
+        # 1. 🔍 第一轮：直接在当前页面找 M3U8
+        found_url = find_m3u8_in_html(html)
+        if found_url: return found_url
+
+        # 2. 📡 第二轮：扫描内嵌窗口 (Iframe) -> 穿透逻辑
+        # 很多电视台网站(如山东卫视)会把播放器藏在 iframe 里
+        iframe_pattern = r'<iframe[^>]+src=["\']([^"\']+)["\']'
+        iframes = re.findall(iframe_pattern, html, re.I)
         
-        if matches:
-            # 取第一个匹配项，并处理转义斜杠
-            found_url = matches[0].replace('\\/', '/')
-            return found_url
+        for iframe_src in iframes:
+            # 处理相对路径 (如 src="/player/...")
+            full_iframe_url = urllib.parse.urljoin(url, iframe_src)
+            
+            # 过滤掉广告或无关的 iframe (简单的关键词过滤)
+            if 'ad' in full_iframe_url or 'google' in full_iframe_url: continue
+
+            # 递归调用：钻进 iframe 里面去找
+            # 注意：这里我们静默钻取，不打印日志，除非成功
+            deep_found = sniff_m3u8_from_web(full_iframe_url, ua, depth + 1)
+            if deep_found:
+                return deep_found
+
     except Exception:
-        # requests 的异常我们静默处理
         pass
     return None
 
@@ -134,13 +166,11 @@ def get_real_url(url, channel_name, retry_mode=False):
     # -------------------------------
     cmd = ['yt-dlp', '-g', '--no-playlist', '--no-check-certificate', '--user-agent', current_ua]
     
-    # 针对 YouTube 强制 HLS，针对通用网站优先 HLS 允许回退
     if is_yt:
         cmd.extend(['-f', 'best[protocol^=m3u8]/best'])
         cmd.extend(['--referer', 'https://www.youtube.com/'])
         if os.path.exists(COOKIE_TEMP_FILE): cmd.extend(['--cookies', COOKIE_TEMP_FILE])
     else:
-        # 非油管：尝试通用提取器，移除 mp4 限制，让它自己找
         cmd.extend(['--referer', url])
     
     cmd.append(url)
@@ -156,10 +186,9 @@ def get_real_url(url, channel_name, retry_mode=False):
         pass
 
     # -------------------------------
-    # 策略 B: 深度挖掘 (仅非 YouTube 触发)
+    # 策略 B: 深度挖掘 (包含 Iframe 穿透)
     # -------------------------------
     if not is_yt:
-        # 如果 yt-dlp 失败，尝试模拟浏览器嗅探 M3U8 (调用 requests 版)
         sniffed_url = sniff_m3u8_from_web(url, current_ua)
         if sniffed_url:
             return channel_name, sniffed_url, True
@@ -173,7 +202,6 @@ def update_streams():
     # 1. 执行鉴权
     process_smart_cookies()
     
-    # 容错读取 JSON
     try:
         with open(JSON_FILE, 'r', encoding='utf-8') as f: data = json.load(f)
     except Exception as e:
@@ -221,7 +249,7 @@ def update_streams():
                 for future in as_completed(futures):
                     n, u, success = future.result()
                     if success and u:
-                        # 检测是否是通过嗅探获取的链接 (简单的逻辑判断)
+                        # 风格严格保留：如果嗅探成功，显示特殊标记，但不破坏原有结构
                         is_sniffed = '.m3u8' in u and 'googlevideo' not in u and 'bilivideo' not in u
                         tag = "🔍 [网页嗅探]" if is_sniffed else "✅ [解析成功]"
                         print(f"   {tag} {n}") 
