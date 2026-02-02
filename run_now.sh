@@ -1,22 +1,6 @@
 #!/bin/bash
-# 快速触发脚本 - 带基础环境修复
-
+# 不管在哪里运行，先跳到工作目录
 cd /sdcard/live || exit
-
-echo "🔍 正在检查运行环境..."
-
-# 1. 快速修补 requests
-if ! python -c "import requests" 2>/dev/null; then
-    echo "🔧 补全 requests..."
-    pip install requests -q
-fi
-
-# 2. 快速修补 yt-dlp
-if ! command -v yt-dlp &> /dev/null; then
-    echo "🔧 补全 yt-dlp..."
-    pip install yt-dlp -q
-fi
-
-# 发送信号
+# 创建信号文件
 touch run_now_signal
-echo "✅ 信号已发送！主程序将立即响应。"
+echo "✅ 已发送触发信号！主程序将在 1 秒内响应。"
