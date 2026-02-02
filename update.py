@@ -11,51 +11,82 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 TARGET_FILES = ['TV.m3u8', 'no sex/TV_1(no sex).m3u8']
 JSON_FILE = 'streams.json'
 
-# ⚠️ 浏览器模式比较吃内存，并发建议调小一点 (5-8之间)
-BATCH_SIZE = 5  
+# ⚠️ 浏览器模式极耗内存，并发必须压低，否则 Termux 会炸
+BATCH_SIZE = 4
 
 # ==========================================
-# 🕵️‍♂️ 浏览器驱动嗅探 (Selenium Sniffer)
+# 🕵️‍♂️ 浏览器网络嗅探 (Network Sniffer)
 # ==========================================
 def sniff_via_browser(url):
     """
-    [重武器] 启动无头浏览器进行嗅探
-    仅用于：yt-dlp 搞不定的非 YouTube 网站 (如 iqilu.com)
+    [上帝模式] 启动浏览器并监听网络流量
+    模拟 Web Video Caster 的核心原理：拦截 m3u8 请求
     """
     driver = None
     try:
         from selenium import webdriver
         from selenium.webdriver.chrome.options import Options
         from selenium.webdriver.common.by import By
-        
+        from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
+        # 1. 配置开启网络日志 (Performance Logging)
+        # 这是捕捉隐藏流的关键！
+        caps = DesiredCapabilities.CHROME
+        caps['goog:loggingPrefs'] = {'performance': 'ALL'}
+
         options = Options()
         options.add_argument("--headless") # 无头模式
         options.add_argument("--disable-gpu")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
-        # 伪装成手机，逼迫网站交出 m3u8
+        # 伪装成安卓手机，诱导网站加载 H5 播放器
         options.add_argument("user-agent=Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36")
 
-        driver = webdriver.Chrome(options=options)
-        driver.set_page_load_timeout(25) # 设置超时
+        # 启动浏览器
+        driver = webdriver.Chrome(options=options) # Selenium 4.x 不需要 desired_capabilities 参数，日志默认开启或通过 options 配置
         
-        driver.get(url)
-        time.sleep(4) # 等待 JS 执行 (如 token 计算)
-        
-        # 1. 暴力搜源码
-        page_source = driver.page_source
-        matches = re.findall(r'(http[s]?://[^\s"\'<>]+?\.m3u8[^\s"\'<>]*)', page_source)
-        if matches:
-            return matches[0].replace('\\/', '/')
-            
-        # 2. 搜 video 标签
-        try:
-            video = driver.find_element(By.TAG_NAME, 'video')
-            src = video.get_attribute('src')
-            if src and 'm3u8' in src: return src
-        except: pass
+        # 开启 CDP (Chrome DevTools Protocol) 监听网络
+        driver.execute_cdp_cmd('Network.enable', {})
 
-    except:
+        driver.set_page_load_timeout(30)
+        driver.get(url)
+        
+        # 2. 模拟用户行为：点击屏幕尝试触发播放
+        time.sleep(3)
+        try:
+            # 尝试点击 body 或 video 标签，模拟手指触屏
+            driver.find_element(By.TAG_NAME, 'body').click()
+            driver.execute_script("document.querySelector('video').play();")
+        except: pass
+        
+        # 再等几秒让请求发出去
+        time.sleep(5)
+
+        # 3. 🔍 核心：扫描网络日志 (The God Mode)
+        # 获取浏览器所有的网络请求记录
+        logs = driver.get_log('performance')
+        
+        for entry in logs:
+            message = json.loads(entry['message'])['message']
+            
+            # 筛选网络请求
+            if message['method'] == 'Network.requestWillBeSent':
+                req_url = message['params']['request']['url']
+                
+                # 🎯 命中目标：发现 m3u8
+                if '.m3u8' in req_url:
+                    # 排除掉广告或者无效的
+                    if 'ad' not in req_url and 'http' in req_url:
+                        return req_url
+
+            # 备选：有时候是在 response 里
+            elif message['method'] == 'Network.responseReceived':
+                resp_url = message['params']['response']['url']
+                if '.m3u8' in resp_url:
+                    return resp_url
+
+    except Exception:
+        # 浏览器启动失败或超时，静默处理
         pass
     finally:
         if driver:
@@ -63,12 +94,11 @@ def sniff_via_browser(url):
             except: pass
     return None
 
-# --- 核心解析模块 (智能分流版) ---
+# --- 核心解析模块 (智能分流) ---
 def get_real_url(url, channel_name):
     # ==========================================
-    # 策略 A: YouTube 专属快速通道
+    # 策略 A: YouTube 专属快速通道 (yt-dlp)
     # ==========================================
-    # 逻辑：yt-dlp 是油管的神。它不行就是源挂了，不必再试浏览器。
     if 'youtube.com' in url or 'youtu.be' in url:
         cmd = ['yt-dlp', '-g', '--no-playlist', '--no-check-certificate', '-f', 'best[protocol^=m3u8]/best', url]
         try:
@@ -78,14 +108,13 @@ def get_real_url(url, channel_name):
                 if raw and 'http' in raw:
                     return channel_name, raw, True
         except: pass
-        # 油管失败直接返回失败，跳过浏览器环节
         return channel_name, None, False
 
     # ==========================================
     # 策略 B: 普通网站 (混合双打)
     # ==========================================
     else:
-        # 1. 先试 yt-dlp (轻量级，速度快)
+        # 1. 先试 yt-dlp (轻量级)
         cmd = ['yt-dlp', '-g', '--referer', url, url]
         try:
             res = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
@@ -95,9 +124,10 @@ def get_real_url(url, channel_name):
                     return channel_name, raw, True
         except: pass
 
-        # 2. 失败了？启动浏览器 (重武器兜底)
-        # 仅针对非 YouTube 的顽固分子 (如山东卫视)
-        # 这里不打印额外日志，保持界面整洁，只在成功时显示
+        # 2. 失败了？启动浏览器网络嗅探 (重武器)
+        # 只有这里才会打印一行灰色调试信息，让你知道它在努力
+        print(f"   ⚙️ [启动嗅探] {channel_name} ...")
+        
         sniffed = sniff_via_browser(url)
         if sniffed:
             return channel_name, sniffed, True
@@ -141,7 +171,7 @@ def update_streams():
         print(f"🚀 [第一阶段] 正在更新直播频道...")
         print(f"========================================")
         
-        # ⚠️ 并发不宜过大，防止浏览器启动过多卡死手机
+        # 批量执行
         for i in range(0, len(live_tasks), BATCH_SIZE):
             batch = live_tasks[i:i+BATCH_SIZE]
             print(f"\n⚡ [批次执行] 序列: {i//BATCH_SIZE + 1}...")
@@ -151,12 +181,8 @@ def update_streams():
                 for future in as_completed(futures):
                     n, u, success = future.result()
                     if success and u:
-                        # 区分一下来源，稍微给点提示，但不破坏队形
-                        tag = "✅ [解析成功]"
-                        if '.m3u8' in u and 'googlevideo' not in u and 'youtube' not in u:
-                            # 如果不是油管链接但成功了，多半是浏览器抓到的
-                            pass 
-                        print(f"   {tag} {n}") 
+                        # 文本风格严格保留，不管是怎么抓到的，都显示解析成功
+                        print(f"   ✅ [解析成功] {n}") 
                         unique_tasks[n] = u
                     else:
                         print(f"   🌪️ [暂缓处理] {n}")
@@ -164,7 +190,7 @@ def update_streams():
                         if orig: failed_channels.append((n, orig))
             time.sleep(0.5)
 
-    # Phase 2: 重试 (仅做最后挣扎，不建议重试时再开浏览器，太慢)
+    # Phase 2: 重试 (仅 yt-dlp 快速重试，不再开浏览器)
     if failed_channels:
         print(f"\n========================================")
         print(f"🔄 [最终挽救] 集中处理所有异常任务...")
@@ -172,7 +198,6 @@ def update_streams():
         
         for idx, (n, u) in enumerate(failed_channels):
             print(f"   🛠️ [正在修复] {n} ...")
-            # 简单重试，不再调用浏览器，防止死循环卡住
             if 'youtube' in u:
                 cmd = ['yt-dlp', '-g', u]
                 try:
