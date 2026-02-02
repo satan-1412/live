@@ -11,26 +11,35 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 TARGET_FILES = ['TV.m3u8', 'no sex/TV_1(no sex).m3u8']
 JSON_FILE = 'streams.json'
 
-# ⚠️ 浏览器模式极耗内存，并发必须压低，否则 Termux 会炸
+# ⚠️ 浏览器模式并发极低，防止卡死
 BATCH_SIZE = 4
 
 # ==========================================
-# 🕵️‍♂️ 浏览器网络嗅探 (Network Sniffer)
+# 🕵️‍♂️ 浏览器嗅探 (Termux 修正版)
 # ==========================================
 def sniff_via_browser(url):
     """
-    [上帝模式] 启动浏览器并监听网络流量
-    模拟 Web Video Caster 的核心原理：拦截 m3u8 请求
+    [Termux专用] 启动 Chromium 监听网络
     """
     driver = None
     try:
         from selenium import webdriver
         from selenium.webdriver.chrome.options import Options
+        from selenium.webdriver.chrome.service import Service
         from selenium.webdriver.common.by import By
         from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-        # 1. 配置开启网络日志 (Performance Logging)
-        # 这是捕捉隐藏流的关键！
+        # 1. Termux 必须明确指定 chromedriver 路径
+        # 这是之前失败的核心原因！
+        termux_driver_path = "/data/data/com.termux/files/usr/bin/chromedriver"
+        
+        if not os.path.exists(termux_driver_path):
+            print(f"      ⚙️ [调试] 未找到驱动: {termux_driver_path}")
+            return None
+
+        service = Service(executable_path=termux_driver_path)
+
+        # 2. 配置开启网络日志
         caps = DesiredCapabilities.CHROME
         caps['goog:loggingPrefs'] = {'performance': 'ALL'}
 
@@ -39,54 +48,52 @@ def sniff_via_browser(url):
         options.add_argument("--disable-gpu")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
-        # 伪装成安卓手机，诱导网站加载 H5 播放器
+        # 伪装成 Web Video Caster (安卓手机)
         options.add_argument("user-agent=Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36")
 
         # 启动浏览器
-        driver = webdriver.Chrome(options=options) # Selenium 4.x 不需要 desired_capabilities 参数，日志默认开启或通过 options 配置
+        driver = webdriver.Chrome(service=service, options=options)
         
-        # 开启 CDP (Chrome DevTools Protocol) 监听网络
+        # 开启 CDP 监听
         driver.execute_cdp_cmd('Network.enable', {})
-
-        driver.set_page_load_timeout(30)
+        driver.set_page_load_timeout(35)
+        
+        # 访问页面
         driver.get(url)
         
-        # 2. 模拟用户行为：点击屏幕尝试触发播放
+        # 3. 模拟点击 (触发播放)
         time.sleep(3)
         try:
-            # 尝试点击 body 或 video 标签，模拟手指触屏
-            driver.find_element(By.TAG_NAME, 'body').click()
             driver.execute_script("document.querySelector('video').play();")
         except: pass
         
-        # 再等几秒让请求发出去
-        time.sleep(5)
+        # 等待请求飞一会
+        time.sleep(6)
 
-        # 3. 🔍 核心：扫描网络日志 (The God Mode)
-        # 获取浏览器所有的网络请求记录
+        # 4. 扫描网络日志
         logs = driver.get_log('performance')
-        
         for entry in logs:
-            message = json.loads(entry['message'])['message']
-            
-            # 筛选网络请求
-            if message['method'] == 'Network.requestWillBeSent':
-                req_url = message['params']['request']['url']
-                
-                # 🎯 命中目标：发现 m3u8
-                if '.m3u8' in req_url:
-                    # 排除掉广告或者无效的
-                    if 'ad' not in req_url and 'http' in req_url:
+            try:
+                message = json.loads(entry['message'])['message']
+                if message['method'] == 'Network.requestWillBeSent':
+                    req_url = message['params']['request']['url']
+                    if '.m3u8' in req_url and 'http' in req_url:
                         return req_url
+                elif message['method'] == 'Network.responseReceived':
+                    resp_url = message['params']['response']['url']
+                    if '.m3u8' in resp_url and 'http' in resp_url:
+                        return resp_url
+            except: continue
 
-            # 备选：有时候是在 response 里
-            elif message['method'] == 'Network.responseReceived':
-                resp_url = message['params']['response']['url']
-                if '.m3u8' in resp_url:
-                    return resp_url
+        # 5. 如果日志没抓到，尝试暴力搜源码
+        page_source = driver.page_source
+        matches = re.findall(r'(http[s]?://[^\s"\'<>]+?\.m3u8[^\s"\'<>]*)', page_source)
+        if matches:
+            return matches[0].replace('\\/', '/')
 
-    except Exception:
-        # 浏览器启动失败或超时，静默处理
+    except Exception as e:
+        # 这里会打印出具体的错误，让我们知道为什么启动失败
+        print(f"      ⚙️ [调试] 浏览器报错: {str(e)[:50]}...")
         pass
     finally:
         if driver:
@@ -94,10 +101,10 @@ def sniff_via_browser(url):
             except: pass
     return None
 
-# --- 核心解析模块 (智能分流) ---
+# --- 核心解析模块 ---
 def get_real_url(url, channel_name):
     # ==========================================
-    # 策略 A: YouTube 专属快速通道 (yt-dlp)
+    # 策略 A: YouTube 专属 (yt-dlp)
     # ==========================================
     if 'youtube.com' in url or 'youtu.be' in url:
         cmd = ['yt-dlp', '-g', '--no-playlist', '--no-check-certificate', '-f', 'best[protocol^=m3u8]/best', url]
@@ -111,10 +118,10 @@ def get_real_url(url, channel_name):
         return channel_name, None, False
 
     # ==========================================
-    # 策略 B: 普通网站 (混合双打)
+    # 策略 B: 普通网站
     # ==========================================
     else:
-        # 1. 先试 yt-dlp (轻量级)
+        # 1. 先试 yt-dlp
         cmd = ['yt-dlp', '-g', '--referer', url, url]
         try:
             res = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
@@ -124,8 +131,8 @@ def get_real_url(url, channel_name):
                     return channel_name, raw, True
         except: pass
 
-        # 2. 失败了？启动浏览器网络嗅探 (重武器)
-        # 只有这里才会打印一行灰色调试信息，让你知道它在努力
+        # 2. 失败后启动浏览器
+        # 打印提示
         print(f"   ⚙️ [启动嗅探] {channel_name} ...")
         
         sniffed = sniff_via_browser(url)
@@ -165,13 +172,11 @@ def update_streams():
     
     print(f">>> [任务就绪] 直播队列: {len(live_tasks)}")
 
-    # Phase 1: 批量并发
     if live_tasks:
         print(f"\n========================================")
         print(f"🚀 [第一阶段] 正在更新直播频道...")
         print(f"========================================")
         
-        # 批量执行
         for i in range(0, len(live_tasks), BATCH_SIZE):
             batch = live_tasks[i:i+BATCH_SIZE]
             print(f"\n⚡ [批次执行] 序列: {i//BATCH_SIZE + 1}...")
@@ -181,7 +186,6 @@ def update_streams():
                 for future in as_completed(futures):
                     n, u, success = future.result()
                     if success and u:
-                        # 文本风格严格保留，不管是怎么抓到的，都显示解析成功
                         print(f"   ✅ [解析成功] {n}") 
                         unique_tasks[n] = u
                     else:
@@ -190,7 +194,6 @@ def update_streams():
                         if orig: failed_channels.append((n, orig))
             time.sleep(0.5)
 
-    # Phase 2: 重试 (仅 yt-dlp 快速重试，不再开浏览器)
     if failed_channels:
         print(f"\n========================================")
         print(f"🔄 [最终挽救] 集中处理所有异常任务...")
@@ -210,7 +213,6 @@ def update_streams():
             
             print(f"      ❌ [最终熔断] 无法接通，已弃用")
 
-    # I/O 写入
     print("\n>>> [I/O 操作] 正在写入目标文件...")
     for m in TARGET_FILES:
         if not os.path.exists(m): continue
