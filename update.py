@@ -9,35 +9,35 @@ import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # ==========================================
-# ⚙️ 系统核心配置 (System Configuration)
+# ⚙️ 系统核心配置
 # ==========================================
 TARGET_FILES = ['TV.m3u8', 'no sex/TV_1(no sex).m3u8']
 JSON_FILE = 'streams.json'
 
-# 屏蔽 requests 请求 verify=False 时的烦人警告，保持界面清爽
+# 屏蔽 requests 警告
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+# 普通下载用的 UA (混合)
 UA_LIST = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15',
-    'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
 ]
-BATCH_SIZE = 10     # 并发处理阈值
-COOKIE_TEMP_FILE = 'cookies_netscape.txt' # 仅作为运行时临时文件，不上传
+
+# 📱 [关键修改] 嗅探专用：强力安卓 UA (模拟 Web Video Caster)
+MOBILE_UA = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36'
+
+BATCH_SIZE = 10     
+COOKIE_TEMP_FILE = 'cookies_netscape.txt'
 
 def get_random_ua():
     import random
     return random.choice(UA_LIST)
 
 # ==========================================
-# 🔐 鉴权凭证处理子系统 (Credential Subsystem)
+# 🔐 鉴权凭证处理
 # ==========================================
 def process_smart_cookies():
-    """
-    [鉴权逻辑] 优先从云端环境变量加载，避免本地文件依赖
-    """
     content = None
-
     if 'YOUTUBE_COOKIES' in os.environ and os.environ['YOUTUBE_COOKIES'].strip():
         print("    [鉴权中心] ☁️ 检测到云端环境变量密钥，正在加载...")
         content = os.environ['YOUTUBE_COOKIES']
@@ -49,11 +49,10 @@ def process_smart_cookies():
                 print("    [鉴权中心] 📂 检测到本地凭证文件，正在加载...")
         except: pass
 
-    if not content: 
-        print("    [鉴权中心] ⚠️ 未检测到有效凭证，将以访客模式运行。")
-        return False
+    if not content: return False
 
     try:
+        # 处理 JSON 或 Netscape 格式... (保持原逻辑不变)
         if content.startswith('[') or content.startswith('{'):
             try:
                 data = json.loads(content)
@@ -66,18 +65,15 @@ def process_smart_cookies():
                         if not domain.startswith('.'): domain = '.' + domain
                         expiry = str(int(c.get('expirationDate', time.time() + 31536000)))
                         out.write(f"{domain}\tTRUE\t{c.get('path','/')}\tTRUE\t{expiry}\t{c.get('name')}\t{c.get('value')}\n")
-                print(f"    [鉴权中心] ✅ JSON 格式凭证转换完毕")
                 return True
-            except:
-                print(f"    [鉴权中心] ⚠️ JSON 解析异常，尝试切换至兼容模式...")
+            except: pass
 
         if "# Netscape" in content or content.count('\t') > 3:
             with open(COOKIE_TEMP_FILE, 'w', encoding='utf-8') as out:
                 out.write(content)
-            print(f"    [鉴权中心] ✅ 标准 Netscape 格式加载完毕")
             return True
-
-        print("    [鉴权中心] ⚠️ 格式未识别，启用启发式兼容模式...")
+        
+        # 简单兼容模式
         with open(COOKIE_TEMP_FILE, 'w', encoding='utf-8') as out:
             out.write("# Netscape HTTP Cookie File\n")
             expiry = str(int(time.time() + 31536000))
@@ -87,70 +83,81 @@ def process_smart_cookies():
                         name, value = pair.strip().split('=', 1)
                         out.write(f".youtube.com\tTRUE\t/\tTRUE\t{expiry}\t{name}\t{value}\n")
                     except: continue
-        print(f"    [鉴权中心] ✅ 兼容性转换完成")
         return True
-
-    except Exception as e:
-        print(f"    [鉴权中心] ❌ 凭证处理流程致命错误: {e}")
+    except Exception:
         return False
 
-# --- 深度网页嗅探器 (Web Sniffer - 穿透版) ---
-def find_m3u8_in_html(html):
-    """
-    [辅助功能] 在 HTML 文本中正则匹配 m3u8
-    """
-    # 模式1: 标准 http 开头的 m3u8
-    # 模式2: 相对路径 /xxx/xxx.m3u8 (简单匹配)
-    # 增加对转义字符的处理 (如 \/)
-    try:
-        pattern = r'(http[s]?:\\?/\\?/[^\s"\'<>]+?\.m3u8[^\s"\'<>]*)'
-        matches = re.findall(pattern, html)
-        if matches:
-            return matches[0].replace('\\/', '/')
-    except:
-        pass
-    return None
+# --- 🕸️ 暴力网页嗅探器 (Hunter Mode) ---
+def clean_url(url):
+    """清理并验证 URL"""
+    # 1. 解码 URL 编码 (http%3A%2F%2F -> http://)
+    url = urllib.parse.unquote(url)
+    # 2. 处理 JSON Unicode 转义 (\u002F -> /)
+    url = url.encode('utf-8').decode('unicode_escape')
+    # 3. 处理反斜杠转义 (\/ -> /)
+    url = url.replace('\\/', '/')
+    return url
 
-def sniff_m3u8_from_web(url, ua, depth=0):
+def find_m3u8_deep(text):
     """
-    [兜底逻辑] 模拟 Web Video Caster，支持 Iframe 穿透
+    [核心算法] 在任意文本中暴力搜索 .m3u8
     """
-    # 防止无限递归，限制穿透层数为 2 层
-    if depth > 1: return None
+    candidates = []
+    # 策略1：寻找标准 http...m3u8 (忽略空白字符)
+    pattern1 = r'(http[s]?://[^\s"\'<>{}|\\^`]+?\.m3u8[^\s"\'<>{}|\\^`]*)'
+    matches = re.findall(pattern1, text, re.I)
+    candidates.extend(matches)
+
+    # 策略2：寻找被转义的链接 (http:\/\/...)
+    pattern2 = r'(http[s]?:\\?/\\?/[^\s"\'<>]+?\.m3u8[^\s"\'<>]*)'
+    matches2 = re.findall(pattern2, text, re.I)
+    candidates.extend(matches2)
+
+    # 清洗并去重
+    valid_urls = []
+    for u in candidates:
+        clean = clean_url(u)
+        if 'http' in clean and '.m3u8' in clean:
+            valid_urls.append(clean)
+    
+    return valid_urls[0] if valid_urls else None
+
+def sniff_m3u8_from_web(url, depth=0):
+    """
+    [兜底逻辑] 模拟手机浏览器访问，支持 iframe 穿透
+    """
+    if depth > 1: return None # 防止无限递归
 
     try:
+        # ⚡ 关键：使用 MOBILE_UA 伪装成安卓手机
         headers = {
-            'User-Agent': ua,
+            'User-Agent': MOBILE_UA,
             'Referer': url,
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
         }
         
-        # 请求网页
-        response = requests.get(url, headers=headers, timeout=10, verify=False, allow_redirects=True)
-        response.encoding = response.apparent_encoding
+        response = requests.get(url, headers=headers, timeout=15, verify=False, allow_redirects=True)
+        response.encoding = response.apparent_encoding # 自动纠正编码
         html = response.text
         
-        # 1. 🔍 第一轮：直接在当前页面找 M3U8
-        found_url = find_m3u8_in_html(html)
+        # 1. 🔍 第一轮：直接暴力搜索当前页面的 m3u8
+        found_url = find_m3u8_deep(html)
         if found_url: return found_url
 
-        # 2. 📡 第二轮：扫描内嵌窗口 (Iframe) -> 穿透逻辑
-        # 很多电视台网站(如山东卫视)会把播放器藏在 iframe 里
+        # 2. 📡 第二轮：扫描内嵌窗口 (Iframe) -> 穿透
+        # 很多电视台会把播放器藏在 iframe 里
         iframe_pattern = r'<iframe[^>]+src=["\']([^"\']+)["\']'
         iframes = re.findall(iframe_pattern, html, re.I)
         
         for iframe_src in iframes:
-            # 处理相对路径 (如 src="/player/...")
+            # 补全相对路径
             full_iframe_url = urllib.parse.urljoin(url, iframe_src)
-            
-            # 过滤掉广告或无关的 iframe (简单的关键词过滤)
+            # 过滤垃圾广告
             if 'ad' in full_iframe_url or 'google' in full_iframe_url: continue
 
-            # 递归调用：钻进 iframe 里面去找
-            # 注意：这里我们静默钻取，不打印日志，除非成功
-            deep_found = sniff_m3u8_from_web(full_iframe_url, ua, depth + 1)
-            if deep_found:
-                return deep_found
+            # 递归：钻进去找
+            deep_found = sniff_m3u8_from_web(full_iframe_url, depth + 1)
+            if deep_found: return deep_found
 
     except Exception:
         pass
@@ -159,37 +166,40 @@ def sniff_m3u8_from_web(url, ua, depth=0):
 # --- 核心解析模块 (混合引擎版) ---
 def get_real_url(url, channel_name, retry_mode=False):
     is_yt = 'youtube.com' in url or 'youtu.be' in url
-    current_ua = get_random_ua()
     
     # -------------------------------
-    # 策略 A: yt-dlp 标准解析
+    # 策略 A: yt-dlp 标准解析 (优先用于油管)
     # -------------------------------
-    cmd = ['yt-dlp', '-g', '--no-playlist', '--no-check-certificate', '--user-agent', current_ua]
-    
     if is_yt:
+        cmd = ['yt-dlp', '-g', '--no-playlist', '--no-check-certificate', '--user-agent', get_random_ua()]
         cmd.extend(['-f', 'best[protocol^=m3u8]/best'])
         cmd.extend(['--referer', 'https://www.youtube.com/'])
         if os.path.exists(COOKIE_TEMP_FILE): cmd.extend(['--cookies', COOKIE_TEMP_FILE])
+        cmd.append(url)
+        
+        try:
+            res = subprocess.run(cmd, capture_output=True, text=True, timeout=45)
+            if res.returncode == 0:
+                raw = res.stdout.strip().split('\n')[0]
+                if raw and 'http' in raw: return channel_name, raw, True
+        except: pass
+    
+    # -------------------------------
+    # 策略 B: 强力网页嗅探 (主要用于非油管、国内电视台)
+    # -------------------------------
     else:
-        cmd.extend(['--referer', url])
-    
-    cmd.append(url)
-    
-    try:
-        res = subprocess.run(cmd, capture_output=True, text=True, timeout=45)
-        if res.returncode == 0:
-            raw_output = res.stdout.strip()
-            real_url = raw_output.split('\n')[0] if raw_output else None
-            if real_url and 'http' in real_url:
-                return channel_name, real_url, True
-    except:
-        pass
+        # 先尝试 yt-dlp (万一它支持)
+        cmd = ['yt-dlp', '-g', '--no-playlist', '--no-check-certificate', '--user-agent', get_random_ua()]
+        cmd.append(url)
+        try:
+            res = subprocess.run(cmd, capture_output=True, text=True, timeout=20)
+            if res.returncode == 0:
+                raw = res.stdout.strip().split('\n')[0]
+                if raw and 'http' in raw: return channel_name, raw, True
+        except: pass
 
-    # -------------------------------
-    # 策略 B: 深度挖掘 (包含 Iframe 穿透)
-    # -------------------------------
-    if not is_yt:
-        sniffed_url = sniff_m3u8_from_web(url, current_ua)
+        # 如果 yt-dlp 失败，启动 Python 暴力嗅探
+        sniffed_url = sniff_m3u8_from_web(url)
         if sniffed_url:
             return channel_name, sniffed_url, True
 
@@ -208,8 +218,7 @@ def update_streams():
         print(f"❌ JSON 配置文件格式错误: {e}")
         return
 
-    if "Run_Series_Loop" in data:
-        data.pop("Run_Series_Loop") 
+    if "Run_Series_Loop" in data: data.pop("Run_Series_Loop") 
     
     stream_map = {}
     def extract(d):
@@ -232,9 +241,7 @@ def update_streams():
     
     print(f">>> [任务就绪] 直播队列: {len(live_tasks)}")
 
-    # ==========================================
-    # Phase 1: 高优先级 - 直播频道 (Live Channels)
-    # ==========================================
+    # Phase 1: 批量并发
     if live_tasks:
         print(f"\n========================================")
         print(f"🚀 [第一阶段] 正在更新直播频道...")
@@ -249,9 +256,9 @@ def update_streams():
                 for future in as_completed(futures):
                     n, u, success = future.result()
                     if success and u:
-                        # 风格严格保留：如果嗅探成功，显示特殊标记，但不破坏原有结构
+                        # 标记来源
                         is_sniffed = '.m3u8' in u and 'googlevideo' not in u and 'bilivideo' not in u
-                        tag = "🔍 [网页嗅探]" if is_sniffed else "✅ [解析成功]"
+                        tag = "🔍 [嗅探成功]" if is_sniffed else "✅ [解析成功]"
                         print(f"   {tag} {n}") 
                         unique_tasks[n] = u
                     else:
@@ -260,9 +267,7 @@ def update_streams():
                         if orig: failed_channels.append((n, orig))
             time.sleep(0.5)
 
-    # ==========================================
-    # Phase 2: 最终挽救 - 全局重试 (Global Retry)
-    # ==========================================
+    # Phase 2: 重试
     if failed_channels:
         print(f"\n========================================")
         print(f"🔄 [最终挽救] 集中处理所有异常任务...")
@@ -283,10 +288,7 @@ def update_streams():
                     time.sleep(2)
             if not retry_success: print(f"      ❌ [最终熔断] 无法接通，已弃用")
 
-    # ==========================================
-    # I/O 持久化 (Persistence)
-    # ==========================================
-    
+    # I/O 写入
     print("\n>>> [I/O 操作] 正在写入目标文件...")
     for m in TARGET_FILES:
         if not os.path.exists(m): continue
